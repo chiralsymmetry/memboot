@@ -171,6 +171,40 @@ namespace MemBoot.Tests
             }
         }
 
+        [Theory]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { 0, 1, 2, 3, 4 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { 2, 4, 1, 3, 0 },
+            new int[] { 2, 4, 1, 3, 0 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+            new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 })]
+        public void IndexOfShouldWork(int capacity, int[] itemsToAdd, int[] itemsToLookFor, int[] expectedIndices)
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(capacity);
+
+            // Act
+            foreach (var item in itemsToAdd)
+            {
+                ringList.Add(item);
+            }
+
+            // Assert
+            for (int i = 0; i < itemsToLookFor.Length; i++)
+            {
+                var itemToLookFor = itemsToLookFor[i];
+                var expectedIndex = expectedIndices[i];
+                var actualIndex = ringList.IndexOf(itemToLookFor);
+                Assert.Equal(expectedIndex, actualIndex);
+            }
+        }
+
         [Fact]
         public void RemovingNoncontainedItemsShouldDoNothing()
         {
