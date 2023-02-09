@@ -16,7 +16,8 @@ namespace MemBoot
         public RingList(int capacity)
         {
             _array = new T[capacity];
-
+            _count = 0;
+            _firstItem = -1;
         }
 
         public T this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -34,7 +35,9 @@ namespace MemBoot
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            Array.Clear(_array);
+            _count = 0;
+            _firstItem = -1;
         }
 
         public bool Contains(T item)
