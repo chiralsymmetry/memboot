@@ -131,10 +131,9 @@ namespace MemBoot
             throw new NotImplementedException();
         }
 
-        public bool Remove(T item)
+        private bool RemoveAtInternalIndex(int i)
         {
             bool result = false;
-            var i = InternalIndex(IndexOf(item));
             if (i >= 0)
             {
                 if (IsFull)
@@ -142,7 +141,7 @@ namespace MemBoot
                     if (i < _firstItem)
                     {
                         int count = LastItemSuccessor - i;
-                        CopyInArray(_array, i+1, i, count);
+                        CopyInArray(_array, i + 1, i, count);
                     }
                     else
                     {
@@ -171,9 +170,20 @@ namespace MemBoot
             return result;
         }
 
+        public bool Remove(T item)
+        {
+            var i = InternalIndex(IndexOf(item));
+            return RemoveAtInternalIndex(i);
+        }
+
         public void RemoveAt(int index)
         {
-            throw new ArgumentOutOfRangeException();
+            if (index < 0 || index >= Count)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            var i = InternalIndex(index);
+            RemoveAtInternalIndex(i);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
