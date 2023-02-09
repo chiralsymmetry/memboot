@@ -45,7 +45,7 @@ namespace MemBoot
 
         public bool Contains(T item)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
