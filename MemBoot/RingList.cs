@@ -87,7 +87,7 @@ namespace MemBoot
 
         public int Count => _count;
 
-        public bool IsReadOnly => throw new NotImplementedException();
+        public bool IsReadOnly => false;
 
         public void Add(T item)
         {
