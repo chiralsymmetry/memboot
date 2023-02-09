@@ -128,7 +128,7 @@ namespace MemBoot
 
         public void Insert(int index, T item)
         {
-            throw new NotImplementedException();
+            throw new ArgumentOutOfRangeException();
         }
 
         private bool RemoveAtInternalIndex(int i)
