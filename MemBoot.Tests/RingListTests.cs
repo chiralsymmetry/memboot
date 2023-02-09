@@ -14,7 +14,7 @@ namespace MemBoot.Tests
         public void EmptyListShouldHaveCountZero()
         {
             // Arrange
-            IList<string> ringList = new RingList<string>();
+            IList<string> ringList = new RingList<string>(10);
             int expected = 0;
 
             // Act
@@ -28,7 +28,7 @@ namespace MemBoot.Tests
         public void AddingItemShouldGiveCountOne()
         {
             // Arrange
-            IList<string> ringList = new RingList<string>();
+            IList<string> ringList = new RingList<string>(10);
             int expected = 1;
 
             // Act
