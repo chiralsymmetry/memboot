@@ -437,5 +437,62 @@ namespace MemBoot.Tests
                 });
             }
         }
+
+        [Theory]
+        [InlineData(10,
+            new int[] { },
+            new int[] { 0 },
+            new int[] { 200 },
+            new int[] { 200 })]
+        [InlineData(10,
+            new int[] { 100 },
+            new int[] { 0 },
+            new int[] { 200 },
+            new int[] { 200, 100 })]
+        [InlineData(10,
+            new int[] { 100 },
+            new int[] { 1 },
+            new int[] { 200 },
+            new int[] { 100, 200 })]
+        [InlineData(10,
+            new int[] { 100, 101, 102, 103, 104 },
+            new int[] { 0, 1, 6, 8 },
+            new int[] { 200, 201, 202, 203 },
+            new int[] { 200, 201, 100, 101, 102, 103, 202, 104, 203 })]
+        [InlineData(10,
+            new int[] { 100, 101, 102, 103, 104, 105, 106, 107, 108, 109 },
+            new int[] { 0, 1, 6, 8, 9 },
+            new int[] { 200, 201, 202, 203, 204 },
+            new int[] { 200, 201, 100, 101, 102, 103, 202, 104, 203, 204 })]
+        [InlineData(10,
+            new int[] { 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112 },
+            new int[] { 0, 1, 6, 8, 9 },
+            new int[] { 200, 201, 202, 203, 204 },
+            new int[] { 200, 201, 103, 104, 105, 106, 202, 107, 203, 204 })]
+        public void InsertShouldWork(int capacity, int[] itemsToAdd, int[] indicesToInsert, int[] itemsToInsert, int[] expectedArray)
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(capacity);
+            foreach (var item in itemsToAdd)
+            {
+                ringList.Add(item);
+            }
+
+            // Act
+            foreach (var i in indicesToInsert)
+            {
+                int itemToInsert = itemsToInsert[i];
+                ringList.Insert(i, itemToInsert);
+            }
+            int?[] actualArray = ringList.ToArray();
+
+            // Assert
+            for (int i = 0; i < expectedArray.Length; i++)
+            {
+                var expectedItem = expectedArray[i];
+                var actualItem = actualArray[i];
+                Assert.Equal(expectedItem, actualItem);
+            }
+        }
     }
 }
