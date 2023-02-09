@@ -17,7 +17,36 @@ namespace MemBoot
         {
             _array = new T[capacity];
             _count = 0;
-            _firstItem = -1;
+            _firstItem = 0;
+        }
+
+        private int LastItemSuccessor => (_firstItem + Count) % _array.Length;
+
+        private T[] GetContents()
+        {
+            // Handle all cases:
+            // []
+            // [0, 1, 2, 3, _, _, _, _]
+            // [_, _, 0, 1, 2, 3, _, _]
+            // [_, _, _, _, 0, 1, 2, 3]
+            // [2, 3, _, _, _, _, 0, 1]
+            T[] contents;
+            if (_count == 0)
+            {
+                contents = Array.Empty<T>();
+            }
+            else if (LastItemSuccessor > _firstItem)
+            {
+                contents = _array.Skip(_firstItem).Take(_count).ToArray();
+            }
+            else
+            {
+                int firstBatchCount = _array.Length - _firstItem;
+                int secondBatchCount = _count - firstBatchCount;
+                contents = _array.Skip(_firstItem).Take(firstBatchCount)
+                    .Concat(_array.Take(secondBatchCount)).ToArray();
+            }
+            return contents;
         }
 
         public T this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -28,11 +57,14 @@ namespace MemBoot
 
         public void Add(T item)
         {
-            _firstItem = (_firstItem + 1) % _array.Length;
-            _array[_firstItem] = item;
+            _array[LastItemSuccessor] = item;
             if (_count < _array.Length)
             {
                 _count++;
+            }
+            else
+            {
+                _firstItem = (_firstItem + 1) % _array.Length;
             }
         }
 
@@ -40,12 +72,12 @@ namespace MemBoot
         {
             Array.Clear(_array);
             _count = 0;
-            _firstItem = -1;
+            _firstItem = 0;
         }
 
         public bool Contains(T item)
         {
-            return true;
+            return GetContents().Contains(item);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
