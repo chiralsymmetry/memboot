@@ -354,5 +354,51 @@ namespace MemBoot.Tests
                 Assert.Equal(expectedItem, actualItem);
             }
         }
+
+        [Theory]
+        [InlineData(10,
+            new int[] { 100 },
+            new int[] { 0 },
+            new int[] { })]
+        [InlineData(10,
+            new int[] { 100, 101, 102, 103, 104 },
+            new int[] { 0, 1, 2 },
+            new int[] { 101, 103 })]
+        [InlineData(10,
+            new int[] { 100, 101, 102, 103, 104 },
+            new int[] { 4, 3, 0 },
+            new int[] { 101, 102 })]
+        [InlineData(10,
+            new int[] { 100, 101, 102, 103, 104, 105, 106, 107, 108, 109 },
+            new int[] { 0, 4, 7, 0, 1, 1 },
+            new int[] { 102, 106, 107, 108 })]
+        [InlineData(10,
+            new int[] { 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112 },
+            new int[] { 0, 4, 7, 0, 1, 1 },
+            new int[] { 105, 109, 110, 111 })]
+        public void RemoveAtShouldWork(int capacity, int[] itemsToAdd, int[] indicesToRemove, int[] expectedArray)
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(capacity);
+
+            // Act
+            foreach (var item in itemsToAdd)
+            {
+                ringList.Add(item);
+            }
+            foreach (var i in indicesToRemove)
+            {
+                ringList.RemoveAt(i);
+            }
+            int?[] actualArray = ringList.ToArray();
+
+            // Assert
+            for (int i = 0; i < expectedArray.Length; i++)
+            {
+                var expectedItem = expectedArray[i];
+                var actualItem = actualArray[i];
+                Assert.Equal(expectedItem, actualItem);
+            }
+        }
     }
 }
