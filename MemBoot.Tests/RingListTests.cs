@@ -54,5 +54,27 @@ namespace MemBoot.Tests
             // Assert
             Assert.Equal(expected, actual);
         }
+
+        [Theory]
+        [InlineData(10, 0, new int[] { })]
+        [InlineData(10, 1, new int[] { 0 })]
+        [InlineData(10, 5, new int[] { 0, 1, 2, 3, 4 })]
+        [InlineData(10, 10, new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 })]
+        [InlineData(10, 10, new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 })]
+        public void AddingSomeItemsShouldGiveCorrectCount(int capacity, int expectedCount, int[] items)
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(capacity);
+
+            // Act
+            foreach (var item in items)
+            {
+                ringList.Add(item);
+            }
+            int actual = ringList.Count;
+
+            // Assert
+            Assert.Equal(expectedCount, actual);
+        }
     }
 }
