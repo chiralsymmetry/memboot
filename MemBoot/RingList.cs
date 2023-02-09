@@ -92,7 +92,8 @@ namespace MemBoot
 
         public int IndexOf(T item)
         {
-            throw new NotImplementedException();
+            var list = new List<T>(GetContents());
+            return list.IndexOf(item);
         }
 
         public void Insert(int index, T item)
