@@ -21,8 +21,13 @@ namespace MemBoot
         }
 
         private bool IsFull => _count == _array.Length;
+        private int FirstItemPredecessor => (_array.Length + _firstItem - 1) % _array.Length;
         private int LastItemSuccessor => (_firstItem + Count) % _array.Length;
 
+        private void IncrementFirstItemIndex() => _firstItem = (_firstItem + 1) % _array.Length;
+        private void DecrementFirstItemIndex() => _firstItem = (_array.Length + _firstItem - 1) % _array.Length;
+        private void IncrementCount() => _count = Math.Min(_array.Length, _count + 1);
+        private void DecrementCount() => _count = Math.Max(0, _count - 1);
         private int InternalIndex(int externalIndex) => (_firstItem + externalIndex) % _array.Length;
 
         private T[] GetContents(int start, int count)
@@ -93,7 +98,7 @@ namespace MemBoot
             }
             else
             {
-                _firstItem = (_firstItem + 1) % _array.Length;
+                IncrementFirstItemIndex();
             }
         }
 
@@ -128,7 +133,54 @@ namespace MemBoot
 
         public void Insert(int index, T item)
         {
-            throw new ArgumentOutOfRangeException();
+            if (index < 0 || index > Count || index == _array.Length)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            if (index == Count)
+            {
+                Add(item);
+            }
+            else if (index == 0)
+            {
+                _array[FirstItemPredecessor] = item;
+                DecrementFirstItemIndex();
+                IncrementCount();
+            }
+            else if (IsFull)
+            {
+                int i = InternalIndex(index);
+                if (FirstItemPredecessor < i)
+                {
+                    int count = i - _firstItem;
+                    CopyInArray(_array, _firstItem, _firstItem - 1, count);
+                    DecrementFirstItemIndex();
+                    i--;
+                }
+                else
+                {
+                    int count = FirstItemPredecessor - i;
+                    CopyInArray(_array, i, i + 1, count);
+                }
+                _array[i] = item;
+            }
+            else
+            {
+                int i = InternalIndex(index);
+                if (i < LastItemSuccessor)
+                {
+                    int count = LastItemSuccessor - i;
+                    CopyInArray(_array, i, i + 1, count);
+                }
+                else
+                {
+                    int count = i - _firstItem;
+                    CopyInArray(_array, _firstItem, _firstItem - 1, count);
+                    DecrementFirstItemIndex();
+                }
+                _array[i] = item;
+                IncrementCount();
+            }
         }
 
         private bool RemoveAtInternalIndex(int i)
@@ -147,7 +199,7 @@ namespace MemBoot
                     {
                         int count = i - _firstItem;
                         CopyInArray(_array, _firstItem, _firstItem + 1, count);
-                        _firstItem = (_firstItem + 1) % _array.Length;
+                        IncrementFirstItemIndex();
                     }
                 }
                 else
@@ -161,10 +213,10 @@ namespace MemBoot
                     {
                         int count = i - _firstItem;
                         CopyInArray(_array, _firstItem, _firstItem + 1, count);
-                        _firstItem = (_firstItem + 1) % _array.Length;
+                        IncrementFirstItemIndex();
                     }
                 }
-                _count--;
+                DecrementCount();
                 result = true;
             }
             return result;
