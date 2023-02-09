@@ -170,5 +170,34 @@ namespace MemBoot.Tests
                 Assert.False(ringList.Contains(item));
             }
         }
+
+        [Fact]
+        public void RemovingNoncontainedItemsShouldDoNothing()
+        {
+            // Arrange
+            int?[] itemsToAdd = new int?[] { 0, 1, 2, 3, 4 };
+            int?[] itemsToRemove = new int?[] { null, 5, 6, 7, 8, 9 };
+            IList<int?> ringList = new RingList<int?>(10);
+
+            // Act
+            foreach (var item in itemsToAdd)
+            {
+                ringList.Add(item);
+            }
+            bool actualResult = false;
+            foreach (var item in itemsToRemove)
+            {
+                actualResult |= ringList.Remove(item);
+            }
+            int expectedCount = itemsToAdd.Length;
+
+            // Assert
+            Assert.False(actualResult);
+            Assert.Equal(expectedCount, ringList.Count);
+            foreach (var item in itemsToAdd)
+            {
+                Assert.True(ringList.Contains(item));
+            }
+        }
     }
 }
