@@ -22,7 +22,7 @@ namespace MemBoot
 
         private int LastItemSuccessor => (_firstItem + Count) % _array.Length;
 
-        private T[] GetContents()
+        private T[] GetContents(int start, int count)
         {
             // Handle all cases:
             // []
@@ -31,22 +31,27 @@ namespace MemBoot
             // [_, _, _, _, 0, 1, 2, 3]
             // [2, 3, _, _, _, _, 0, 1]
             T[] contents;
-            if (_count == 0)
+            if (count == 0)
             {
                 contents = Array.Empty<T>();
             }
-            else if (LastItemSuccessor > _firstItem)
+            else if (LastItemSuccessor > start)
             {
-                contents = _array.Skip(_firstItem).Take(_count).ToArray();
+                contents = _array.Skip(start).Take(count).ToArray();
             }
             else
             {
-                int firstBatchCount = _array.Length - _firstItem;
-                int secondBatchCount = _count - firstBatchCount;
-                contents = _array.Skip(_firstItem).Take(firstBatchCount)
+                int firstBatchCount = _array.Length - start;
+                int secondBatchCount = count - firstBatchCount;
+                contents = _array.Skip(start).Take(firstBatchCount)
                     .Concat(_array.Take(secondBatchCount)).ToArray();
             }
             return contents;
+        }
+
+        private T[] GetContents()
+        {
+            return GetContents(_firstItem, _count);
         }
 
         public T this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
