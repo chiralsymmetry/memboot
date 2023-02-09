@@ -300,5 +300,22 @@ namespace MemBoot.Tests
                 Assert.False(ringList.Contains(item));
             }
         }
+
+        [Fact]
+        public void RemovingByBadIndexShouldThrowException()
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(10) { 0, 1, 2, 3, 4 };
+            int[] badIndices = new int[] { -10, -1, 5, 9, 10 };
+
+            // Act & Assert
+            foreach (var i in badIndices)
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() =>
+                {
+                    ringList.RemoveAt(i);
+                });
+            }
+        }
     }
 }
