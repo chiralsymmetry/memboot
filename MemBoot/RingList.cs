@@ -172,7 +172,7 @@ namespace MemBoot
 
         public void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            throw new ArgumentOutOfRangeException();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
