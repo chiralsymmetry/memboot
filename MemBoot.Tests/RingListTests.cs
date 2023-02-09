@@ -495,5 +495,15 @@ namespace MemBoot.Tests
                 Assert.Equal(expectedItem, actualItem);
             }
         }
+
+        [Fact]
+        public void IsReadOnlyShouldBeFalse()
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(1);
+
+            // Assert
+            Assert.False(ringList.IsReadOnly);
+        }
     }
 }
