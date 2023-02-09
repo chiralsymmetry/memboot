@@ -28,9 +28,12 @@ namespace MemBoot
 
         public void Add(T item)
         {
-            _firstItem++;
+            _firstItem = (_firstItem + 1) % _array.Length;
             _array[_firstItem] = item;
-            _count++;
+            if (_count < _array.Length)
+            {
+                _count++;
+            }
         }
 
         public void Clear()
