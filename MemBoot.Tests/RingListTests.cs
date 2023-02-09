@@ -23,5 +23,20 @@ namespace MemBoot.Tests
             // Assert
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void AddingItemShouldGiveCountOne()
+        {
+            // Arrange
+            IList<string> ringList = new RingList<string>();
+            int expected = 1;
+
+            // Act
+            ringList.Add("");
+            int actual = ringList.Count;
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
     }
 }
