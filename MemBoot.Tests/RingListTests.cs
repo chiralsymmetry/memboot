@@ -113,7 +113,7 @@ namespace MemBoot.Tests
         {
             // Arrange
             int[] itemsToAdd = new int[] { 0, 1, 2, 3, 4 };
-            int[] itemsNotToAdd = new int[] { 5, 6, 7, 8, 9 };
+            int?[] itemsNotToAdd = new int?[] { 5, 6, 7, 8, 9, null };
             IList<int?> ringList = new RingList<int?>(10);
 
             // Act
