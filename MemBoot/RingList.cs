@@ -9,9 +9,18 @@ namespace MemBoot
 {
     public class RingList<T> : IList<T>
     {
+        private readonly T[] _array;
+        private int _count;
+
+        public RingList(int capacity)
+        {
+            _array = new T[capacity];
+
+        }
+
         public T this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public int Count => 0;
+        public int Count => _count;
 
         public bool IsReadOnly => throw new NotImplementedException();
 
