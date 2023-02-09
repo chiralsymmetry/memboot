@@ -111,7 +111,8 @@ namespace MemBoot
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            var contents = GetContents();
+            Array.Copy(contents, array, Count);
         }
 
         public IEnumerator<T> GetEnumerator()
