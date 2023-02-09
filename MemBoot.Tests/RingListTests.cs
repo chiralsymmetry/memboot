@@ -149,5 +149,26 @@ namespace MemBoot.Tests
                 Assert.False(ringList.Contains(item));
             }
         }
+
+        [Fact]
+        public void OverwrittenItemsShouldBeNotContained()
+        {
+            // Arrange
+            int?[] itemsToAdd = new int?[] { null, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            int?[] itemsToOverwrite = new int?[] { null, 0, 1, 2, 3, 4 };
+            IList<int?> ringList = new RingList<int?>(5);
+
+            // Act
+            foreach (var item in itemsToAdd)
+            {
+                ringList.Add(item);
+            }
+
+            // Assert
+            foreach (var item in itemsToOverwrite)
+            {
+                Assert.False(ringList.Contains(item));
+            }
+        }
     }
 }
