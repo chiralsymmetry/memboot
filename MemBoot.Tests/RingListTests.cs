@@ -107,5 +107,26 @@ namespace MemBoot.Tests
                 Assert.True(ringList.Contains(item));
             }
         }
+
+        [Fact]
+        public void NotAddedItemsShouldBeNotContained()
+        {
+            // Arrange
+            int[] itemsToAdd = new int[] { 0, 1, 2, 3, 4 };
+            int[] itemsNotToAdd = new int[] { 5, 6, 7, 8, 9 };
+            IList<int?> ringList = new RingList<int?>(10);
+
+            // Act
+            foreach (var item in itemsToAdd)
+            {
+                ringList.Add(item);
+            }
+
+            // Assert
+            foreach (var item in itemsNotToAdd)
+            {
+                Assert.False(ringList.Contains(item));
+            }
+        }
     }
 }
