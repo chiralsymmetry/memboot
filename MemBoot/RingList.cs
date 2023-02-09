@@ -102,7 +102,7 @@ namespace MemBoot
 
         public bool Remove(T item)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public void RemoveAt(int index)
