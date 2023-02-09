@@ -76,5 +76,36 @@ namespace MemBoot.Tests
             // Assert
             Assert.Equal(expectedCount, actual);
         }
+
+        [Theory]
+        [InlineData(10,
+            new int[] { 0 },
+            new int[] { 0 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { 0, 1, 2, 3, 4 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+            new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 })]
+        public void AddedItemsShouldBeContained(int capacity, int[] items, int[] expectedItems)
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(capacity);
+
+            // Act
+            foreach (var item in items)
+            {
+                ringList.Add(item);
+            }
+
+            // Assert
+            foreach (var item in expectedItems)
+            {
+                Assert.True(ringList.Contains(item));
+            }
+        }
     }
 }
