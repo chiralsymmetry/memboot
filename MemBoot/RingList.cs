@@ -20,7 +20,10 @@ namespace MemBoot
             _firstItem = 0;
         }
 
+        private bool IsFull => _count == _array.Length;
         private int LastItemSuccessor => (_firstItem + Count) % _array.Length;
+
+        private int InternalIndex(int externalIndex) => (_firstItem + externalIndex) % _array.Length;
 
         private T[] GetContents(int start, int count)
         {
@@ -52,6 +55,27 @@ namespace MemBoot
         private T[] GetContents()
         {
             return GetContents(_firstItem, _count);
+        }
+
+        private void CopyInArray(T[] array, int src, int dst, int length)
+        {
+            if (length > array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+            else if (dst < src)
+            {
+                // Shift sub-array to the left.
+                Array.Copy(_array, src, _array, dst, length);
+            }
+            else if (src < dst)
+            {
+                // Shift sub-array to the right.
+                T[] tmpArray = new T[length];
+                Array.Copy(_array, src, tmpArray, 0, length);
+                Array.Copy(tmpArray, 0, _array, dst, length);
+            }
+            // Else elements are in the right place.
         }
 
         public T this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -108,7 +132,42 @@ namespace MemBoot
 
         public bool Remove(T item)
         {
-            return false;
+            bool result = false;
+            var i = InternalIndex(IndexOf(item));
+            if (i >= 0)
+            {
+                if (IsFull)
+                {
+                    if (i < _firstItem)
+                    {
+                        int count = LastItemSuccessor - i;
+                        CopyInArray(_array, i+1, i, count);
+                    }
+                    else
+                    {
+                        int count = i - _firstItem;
+                        CopyInArray(_array, _firstItem, _firstItem + 1, count);
+                        _firstItem = (_firstItem + 1) % _array.Length;
+                    }
+                }
+                else
+                {
+                    if (i < LastItemSuccessor)
+                    {
+                        int count = LastItemSuccessor - 1;
+                        CopyInArray(_array, i + 1, i, count);
+                    }
+                    else
+                    {
+                        int count = i - _firstItem;
+                        CopyInArray(_array, _firstItem, _firstItem + 1, count);
+                        _firstItem = (_firstItem + 1) % _array.Length;
+                    }
+                }
+                _count--;
+                result = true;
+            }
+            return result;
         }
 
         public void RemoveAt(int index)
