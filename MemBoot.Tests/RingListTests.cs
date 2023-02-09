@@ -199,5 +199,72 @@ namespace MemBoot.Tests
                 Assert.True(ringList.Contains(item));
             }
         }
+
+        [Theory]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { 0, 1, 2, 3, 4 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { 0, 1, 2 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { 0, 2, 4 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { 1, 3 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+            new int[] { 0, 1, 2, 3, 4 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+            new int[] { 5, 6, 7, 8, 9 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+            new int[] { 0, 2, 4, 6, 8 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+            new int[] { 1, 3, 5, 7, 9 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+            new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+            new int[] { 3, 4, 5, 6, 7 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+            new int[] { 8, 9, 10, 11, 12 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+            new int[] { 4, 6, 8, 10, 12 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+            new int[] { 3, 5, 7, 9, 11 })]
+        public void RemovedItemsShouldNotBeContained(int capacity, int[] itemsToAdd, int[] itemsToRemove)
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(capacity);
+
+            // Act
+            foreach (var item in itemsToAdd)
+            {
+                ringList.Add(item);
+            }
+            bool actualResult = true;
+            foreach (var item in itemsToRemove)
+            {
+                actualResult &= ringList.Remove(item);
+            }
+
+            // Assert
+            Assert.True(actualResult);
+            foreach (var item in itemsToRemove)
+            {
+                Assert.False(ringList.Contains(item));
+            }
+        }
     }
 }
