@@ -38,5 +38,21 @@ namespace MemBoot.Tests
             // Assert
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void ClearingShouldGiveCountZero()
+        {
+            // Arrange
+            IList<string> ringList = new RingList<string>(10);
+            int expected = 0;
+
+            // Act
+            ringList.Add("");
+            ringList.Clear();
+            int actual = ringList.Count;
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
     }
 }
