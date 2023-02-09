@@ -400,5 +400,42 @@ namespace MemBoot.Tests
                 Assert.Equal(expectedItem, actualItem);
             }
         }
+
+        [Theory]
+        [InlineData(10,
+            new int[] { },
+            new int[] { -10, -1, 1, 9, 10, 11 })]
+        [InlineData(10,
+            new int[] { 0 },
+            new int[] { -10, -1, 2, 9, 10, 11 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { -10, -1, 6, 9, 10, 11 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+            new int[] { -10, -1, 10, 11 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+            new int[] { -10, -1, 10, 11 })]
+        public void InsertingAtBadIndexShouldThrowException(int capacity, int[] itemsToAdd, int[] badIndices)
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(capacity);
+
+            // Act
+            foreach (var item in itemsToAdd)
+            {
+                ringList.Add(item);
+            }
+
+            // Assert
+            foreach (var i in badIndices)
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() =>
+                {
+                    ringList.Insert(i, 99);
+                });
+            }
+        }
     }
 }
