@@ -11,6 +11,7 @@ namespace MemBoot
     {
         private readonly T[] _array;
         private int _count;
+        private int _firstItem;
 
         public RingList(int capacity)
         {
@@ -26,7 +27,9 @@ namespace MemBoot
 
         public void Add(T item)
         {
-            throw new NotImplementedException();
+            _firstItem++;
+            _array[_firstItem] = item;
+            _count++;
         }
 
         public void Clear()
