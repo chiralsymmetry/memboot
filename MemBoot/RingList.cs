@@ -11,7 +11,7 @@ namespace MemBoot
     {
         public T this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public int Count => throw new NotImplementedException();
+        public int Count => 0;
 
         public bool IsReadOnly => throw new NotImplementedException();
 
