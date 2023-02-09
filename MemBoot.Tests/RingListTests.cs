@@ -466,9 +466,9 @@ namespace MemBoot.Tests
             new int[] { 200, 201, 100, 101, 102, 103, 202, 104, 203, 204 })]
         [InlineData(10,
             new int[] { 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112 },
-            new int[] { 0, 1, 6, 8, 9 },
-            new int[] { 200, 201, 202, 203, 204 },
-            new int[] { 200, 201, 103, 104, 105, 106, 202, 107, 203, 204 })]
+            new int[] { 0, 1, 6, 8, 9, 1 },
+            new int[] { 200, 201, 202, 203, 204, 205 },
+            new int[] { 200, 205, 201, 103, 104, 105, 106, 202, 107, 203 })]
         public void InsertShouldWork(int capacity, int[] itemsToAdd, int[] indicesToInsert, int[] itemsToInsert, int[] expectedArray)
         {
             // Arrange
@@ -479,10 +479,11 @@ namespace MemBoot.Tests
             }
 
             // Act
-            foreach (var i in indicesToInsert)
+            for (int i = 0; i < indicesToInsert.Length; i++)
             {
+                int indexToInsert = indicesToInsert[i];
                 int itemToInsert = itemsToInsert[i];
-                ringList.Insert(i, itemToInsert);
+                ringList.Insert(indexToInsert, itemToInsert);
             }
             int?[] actualArray = ringList.ToArray();
 
