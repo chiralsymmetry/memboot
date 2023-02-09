@@ -109,6 +109,27 @@ namespace MemBoot.Tests
         }
 
         [Fact]
+        public void EmptyListShouldNotContainAnything()
+        {
+            // Arrange
+            int[] itemsToAdd = Array.Empty<int>();
+            int?[] itemsNotToAdd = new int?[] { 0, 1, 2, 3, 4, null };
+            IList<int?> ringList = new RingList<int?>(10);
+
+            // Act
+            foreach (var item in itemsToAdd)
+            {
+                ringList.Add(item);
+            }
+
+            // Assert
+            foreach (var item in itemsNotToAdd)
+            {
+                Assert.False(ringList.Contains(item));
+            }
+        }
+
+        [Fact]
         public void NotAddedItemsShouldBeNotContained()
         {
             // Arrange
