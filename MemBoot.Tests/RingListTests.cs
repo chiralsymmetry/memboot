@@ -654,5 +654,34 @@ namespace MemBoot.Tests
             // Assert
             Assert.Equal(expectedCount, actualCount);
         }
+
+        [Fact]
+        public void EmptyRingListShouldBehaveAppropriately()
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(0);
+
+            // Act & Assert
+            Assert.Equal(0, ringList.Count);
+            Assert.Throws<ArgumentOutOfRangeException>(() => { var i = ringList[-1]; } );
+            Assert.Throws<ArgumentOutOfRangeException>(() => { var i = ringList[0]; } );
+            Assert.Throws<ArgumentOutOfRangeException>(() => { var i = ringList[1]; } );
+            Assert.Throws<ArgumentOutOfRangeException>(() => { ringList[-1] = 99; } );
+            Assert.Throws<ArgumentOutOfRangeException>(() => { ringList[0] = 99; } );
+            Assert.Throws<ArgumentOutOfRangeException>(() => { ringList[1] = 99; } );
+            Assert.Throws<ArgumentOutOfRangeException>(() => { ringList.Insert(-1, 99); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { ringList.Insert(0, 99); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { ringList.Insert(1, 99); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { ringList.RemoveAt(-1); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { ringList.RemoveAt(0); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { ringList.RemoveAt(1); });
+            ringList.Clear();
+            Assert.Throws<NotSupportedException>(() => ringList.Add(99));
+            Assert.False(ringList.Contains(99));
+            foreach (var item in ringList)
+            {
+                Assert.Fail("This line should not be reached.");
+            }
+        }
     }
 }
