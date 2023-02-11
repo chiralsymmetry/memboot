@@ -617,7 +617,8 @@ namespace MemBoot.Tests
         {
             // Arrange
             IList<int?> ringList = new RingList<int?>(capacity);
-            var ints = new List<int?>();
+            var expectedOrder = new List<int?>();
+            var actualOrder = new List<int?>();
 
             // Act
             foreach (var item in items)
@@ -626,14 +627,15 @@ namespace MemBoot.Tests
             }
             foreach (var item in expectedItems)
             {
-                ints.Add(item);
+                expectedOrder.Add(item);
             }
 
             // Assert
             foreach (var item in ringList)
             {
-                Assert.Contains(item, ints);
+                actualOrder.Add(item);
             }
+            Assert.True(expectedOrder.SequenceEqual(actualOrder));
         }
     }
 }
