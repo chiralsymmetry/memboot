@@ -42,9 +42,9 @@ namespace MemBoot
                 throw new ArgumentOutOfRangeException(nameof(n));
             }
             float accuracy = 0;
-            if (Answers.Count > 0)
+            if (Answers.Count > 0 && n > 0)
             {
-                accuracy = (float)Answers.Skip(Answers.Count - n).Where(a => a).Count() / (float)Answers.Count;
+                accuracy = (float)Answers.Skip(Answers.Count - n).Where(a => a).Count() / (float)n;
             }
             return accuracy;
         }
