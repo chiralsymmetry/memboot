@@ -41,5 +41,43 @@ namespace MemBoot.Tests
             // Assert
             Assert.True(actualAnswers.SequenceEqual(expectedAnswers));
         }
+
+        [Theory]
+        [InlineData(17,
+            new bool[] { },
+            0)]
+        [InlineData(17,
+            new bool[] { false },
+            0)]
+        [InlineData(17,
+            new bool[] { true },
+            1)]
+        [InlineData(17,
+            new bool[] { false, true, false },
+            1.0 / 3.0)]
+        [InlineData(17,
+            new bool[] { false, true, false, true, true, false, true, false, false },
+            4.0 / 9.0)]
+        [InlineData(17,
+            new bool[] { false, false, true, true, true, false, true, true, true, true, true, true, false, true, true, true, false, false, true, true, false, false, false, false, true },
+            10.0 / 17.0)]
+        public void AnswerAccuracyWorks(int size, bool[] answersToGive, float expectedAccuracy)
+        {
+            // Arrange
+            Flashcard flashcard = new Flashcard(size);
+            float delta = 0.01f;
+            float expectedMin = Math.Max(expectedAccuracy - delta, 0);
+            float expectedMax = Math.Min(expectedAccuracy + delta, 1);
+
+            // Act
+            foreach (var answer in answersToGive)
+            {
+                flashcard.Answer(answer);
+            }
+            float actualAccuracy = flashcard.Accuracy;
+
+            // Assert
+            Assert.InRange(actualAccuracy, expectedMin, expectedMax);
+        }
     }
 }
