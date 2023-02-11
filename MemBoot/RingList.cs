@@ -111,6 +111,10 @@ namespace MemBoot
 
         public void Add(T item)
         {
+            if (_array.Length == 0)
+            {
+                throw new NotSupportedException();
+            }
             _array[LastItemSuccessor] = item;
             if (_count < _array.Length)
             {
