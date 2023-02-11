@@ -637,5 +637,22 @@ namespace MemBoot.Tests
             }
             Assert.True(expectedOrder.SequenceEqual(actualOrder));
         }
+
+        [Fact]
+        public void RemovingItemShouldDecreaseCount()
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(10) { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+
+            // Act
+            int expectedCount = ringList.Count - 3;
+            ringList.Remove(12);
+            ringList.Remove(11);
+            ringList.Remove(10);
+            int actualCount = ringList.Count;
+
+            // Assert
+            Assert.Equal(expectedCount, actualCount);
+        }
     }
 }
