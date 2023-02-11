@@ -89,7 +89,7 @@ namespace MemBoot
             {
                 if (index < 0 || index >= Count)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 }
                 int i = InternalIndex(index);
                 return _array[i];
@@ -98,7 +98,7 @@ namespace MemBoot
             {
                 if (index < 0 || index >= Count)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 }
                 int i = InternalIndex(index);
                 _array[i] = value;
@@ -163,7 +163,7 @@ namespace MemBoot
         {
             if (index < 0 || index > Count || index == _array.Length)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
             if (index == Count)
             {
@@ -260,7 +260,7 @@ namespace MemBoot
         {
             if (index < 0 || index >= Count)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
             var i = InternalIndex(index);
             RemoveAtInternalIndex(i);
