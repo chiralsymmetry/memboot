@@ -142,7 +142,11 @@ namespace MemBoot
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            var data = GetContents();
+            foreach (var item in data)
+            {
+                yield return item;
+            }
         }
 
         public int IndexOf(T item)
@@ -260,7 +264,7 @@ namespace MemBoot
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetEnumerator();
         }
     }
 }
