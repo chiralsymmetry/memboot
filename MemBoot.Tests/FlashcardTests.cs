@@ -65,7 +65,7 @@ namespace MemBoot.Tests
         {
             // Arrange
             Flashcard flashcard = new(size);
-            float delta = 0.01f;
+            float delta = 0.000001f;
             float expectedMin = Math.Max(expectedAccuracy - delta, 0);
             float expectedMax = Math.Min(expectedAccuracy + delta, 1);
 
@@ -157,7 +157,7 @@ namespace MemBoot.Tests
         {
             // Arrange
             Flashcard flashcard = new(size);
-            float delta = 0.01f;
+            float delta = 0.000001f;
             float expectedMin = Math.Max(expectedAccuracy - delta, 0);
             float expectedMax = Math.Min(expectedAccuracy + delta, 1);
 
