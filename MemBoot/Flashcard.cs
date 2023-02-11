@@ -12,13 +12,22 @@ namespace MemBoot
         public string AnswerSide { get; set; } = string.Empty;
         public bool IsComposable { get; set; } = false;
         public RingList<bool> Answers { get; set; }
-        private readonly int AnswerHistorySize;
-        public float Accuracy => (float)Answers.Where(a => a).Count() / (float)AnswerHistorySize;
+        public float Accuracy
+        {
+            get
+            {
+                float accuracy = 0;
+                if (Answers.Count > 0)
+                {
+                    accuracy = (float)Answers.Where(a => a).Count() / (float)Answers.Count;
+                }
+                return accuracy;
+            }
+        }
 
         public Flashcard(int answerHistorySize = 100)
         {
             Answers = new(answerHistorySize);
-            AnswerHistorySize = answerHistorySize;
         }
 
         public void Answer(bool answer)
@@ -28,7 +37,12 @@ namespace MemBoot
 
         public float LastNAccuracy(int n)
         {
-            return (float)Answers.Skip(AnswerHistorySize - n).Where(a => a).Count() / (float)AnswerHistorySize;
+            float accuracy = 0;
+            if (Answers.Count > 0)
+            {
+                accuracy = (float)Answers.Skip(Answers.Count - n).Where(a => a).Count() / (float)Answers.Count;
+            }
+            return accuracy;
         }
     }
 }
