@@ -505,5 +505,19 @@ namespace MemBoot.Tests
             // Assert
             Assert.False(ringList.IsReadOnly);
         }
+
+        [Fact]
+        public void BadIndexReadShouldFail()
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(10) { 0, 1, 2, 3, 4 };
+            int[] badIndices = new int[] { -1, 5, 9, 10, 11 };
+
+            // Act & Assert
+            foreach (var i in badIndices)
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() => ringList[i]);
+            }
+        }
     }
 }
