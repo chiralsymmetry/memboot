@@ -83,7 +83,22 @@ namespace MemBoot
             // Else elements are in the right place.
         }
 
-        public T this[int index] { get => throw new ArgumentOutOfRangeException(); set => throw new NotImplementedException(); }
+        public T this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= Count)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                int i = InternalIndex(index);
+                return _array[i];
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         public int Count => _count;
 
