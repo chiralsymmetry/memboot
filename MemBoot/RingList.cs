@@ -96,7 +96,12 @@ namespace MemBoot
             }
             set
             {
-                throw new ArgumentOutOfRangeException();
+                if (index < 0 || index >= Count)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                int i = InternalIndex(index);
+                _array[i] = value;
             }
         }
 
