@@ -37,6 +37,10 @@ namespace MemBoot
 
         public float LastNAccuracy(int n)
         {
+            if (n < 0 || n > Answers.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(n));
+            }
             float accuracy = 0;
             if (Answers.Count > 0)
             {
