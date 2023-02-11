@@ -79,5 +79,23 @@ namespace MemBoot.Tests
             // Assert
             Assert.InRange(actualAccuracy, expectedMin, expectedMax);
         }
+
+        [Fact]
+        public void LastNAccuracyShouldFailForBadN()
+        {
+            // Arrange
+            Flashcard flashcard = new(10);
+            bool[] answers = { false, false, true, true, true, false, true, true, true, true, true, true, false, true, true, true, false, false, true, true, false, false, false, false, true };
+
+            // Act
+            foreach (var answer in answers)
+            {
+                flashcard.Answer(answer);
+            }
+
+            // Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => { flashcard.LastNAccuracy(-1); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { flashcard.LastNAccuracy(11); });
+        }
     }
 }
