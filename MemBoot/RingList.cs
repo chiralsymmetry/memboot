@@ -96,7 +96,7 @@ namespace MemBoot
             }
             set
             {
-                throw new NotImplementedException();
+                throw new ArgumentOutOfRangeException();
             }
         }
 
