@@ -519,5 +519,39 @@ namespace MemBoot.Tests
                 Assert.Throws<ArgumentOutOfRangeException>(() => ringList[i]);
             }
         }
+
+        [Theory]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { 0, 1, 2, 3, 4 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4 },
+            new int[] { 2, 4, 1, 3, 0 },
+            new int[] { 2, 4, 1, 3, 0 })]
+        [InlineData(10,
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 },
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+            new int[] { 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 })]
+        public void IndexReadShouldWork(int capacity, int[] itemsToAdd, int[] indicesToTry, int[] expectedItems)
+        {
+            // Arrange
+            IList<int?> ringList = new RingList<int?>(capacity);
+
+            // Act
+            foreach (var item in itemsToAdd)
+            {
+                ringList.Add(item);
+            }
+
+            // Assert
+            for (int i = 0; i < indicesToTry.Length; i++)
+            {
+                var indexToTry = indicesToTry[i];
+                var expectedItem = expectedItems[i];
+                var actualItem = ringList[indexToTry];
+                Assert.Equal(expectedItem, actualItem);
+            }
+        }
     }
 }
