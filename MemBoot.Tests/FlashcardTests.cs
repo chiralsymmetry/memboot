@@ -26,10 +26,10 @@ namespace MemBoot.Tests
         [InlineData(5,
             new bool[] { false, true, false, true, true, false, true, false, false },
             new bool[] { true, false, true, false, false })]
-        public void AnswerHistoryWorks(int size, bool[] answersToGive, bool[] expectedAnswers)
+        public void AnswerHistoryShouldWork(int size, bool[] answersToGive, bool[] expectedAnswers)
         {
             // Arrange
-            Flashcard flashcard = new Flashcard(size);
+            Flashcard flashcard = new(size);
 
             // Act
             foreach (var answer in answersToGive)
@@ -61,10 +61,10 @@ namespace MemBoot.Tests
         [InlineData(17,
             new bool[] { false, false, true, true, true, false, true, true, true, true, true, true, false, true, true, true, false, false, true, true, false, false, false, false, true },
             10.0 / 17.0)]
-        public void AnswerAccuracyWorks(int size, bool[] answersToGive, float expectedAccuracy)
+        public void AnswerAccuracyShouldWork(int size, bool[] answersToGive, float expectedAccuracy)
         {
             // Arrange
-            Flashcard flashcard = new Flashcard(size);
+            Flashcard flashcard = new(size);
             float delta = 0.01f;
             float expectedMin = Math.Max(expectedAccuracy - delta, 0);
             float expectedMax = Math.Min(expectedAccuracy + delta, 1);
