@@ -8,45 +8,16 @@ namespace MemBoot
 {
     public class Flashcard
     {
-        public string QuestionSide { get; set; } = string.Empty;
-        public string AnswerSide { get; set; } = string.Empty;
-        public bool IsComposable { get; set; } = false;
-        public RingList<bool> Answers { get; set; }
-        public float Accuracy
-        {
-            get
-            {
-                float accuracy = 0;
-                if (Answers.Count > 0)
-                {
-                    accuracy = (float)Answers.Where(a => a).Count() / (float)Answers.Count;
-                }
-                return accuracy;
-            }
-        }
+        public string QuestionSide { get; set; }
+        public string AnswerSide { get; set; }
 
-        public Flashcard(int answerHistorySize = 100)
-        {
-            Answers = new(answerHistorySize);
-        }
+        public float Mastery { get; set; }
 
-        public void Answer(bool answer)
+        public Flashcard(string question, string answer, float mastery = 0f)
         {
-            Answers.Add(answer);
-        }
-
-        public float LastNAccuracy(int n)
-        {
-            if (n < 0 || n > Answers.Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(n));
-            }
-            float accuracy = 0;
-            if (Answers.Count > 0 && n > 0)
-            {
-                accuracy = (float)Answers.Skip(Answers.Count - n).Where(a => a).Count() / (float)n;
-            }
-            return accuracy;
+            QuestionSide = question;
+            AnswerSide = answer;
+            Mastery = mastery;
         }
     }
 }
