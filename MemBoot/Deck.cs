@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,23 +12,26 @@ namespace MemBoot
     {
         private readonly IList<Flashcard> cards = new List<Flashcard>();
         private readonly IDictionary<Flashcard, bool> cardHasBeenIntroduced = new Dictionary<Flashcard, bool>();
+        private Flashcard? previouslyChosenCard = null;
 
         private readonly Random rnd = new();
-        private readonly float MasteryThreshold;
-        private readonly float InitialProbability;
-        private readonly float TransitionProbability;
-        private readonly float SlippingProbability;
-        private readonly float LuckyGuessProbability;
+        private readonly double MasteryThreshold;
+        private readonly double CompetencyThreshold;
+        private readonly double InitialProbability;
+        private readonly double TransitionProbability;
+        private readonly double SlippingProbability;
+        private readonly double LuckyGuessProbability;
 
         public bool CardsAreComposable { get; }
 
-        public Deck(float init, float transit, float slip, float guess, float masteryThreshold, IEnumerable<Flashcard> cards, bool cardsAreComposable)
+        public Deck(double init, double transit, double slip, double guess, double masteryThreshold, double competencyThreshold, IEnumerable<Flashcard> cards, bool cardsAreComposable)
         {
             InitialProbability = init;
             TransitionProbability = transit;
             SlippingProbability = slip;
             LuckyGuessProbability = guess;
             MasteryThreshold = masteryThreshold;
+            CompetencyThreshold = competencyThreshold;
             CardsAreComposable = cardsAreComposable;
             foreach (var card in cards)
             {
@@ -36,7 +40,7 @@ namespace MemBoot
             }
         }
 
-        public Deck() : this(0.0f, 0.1f, 0.1f, 0.33f, 0.95f, Array.Empty<Flashcard>(), false) { }
+        public Deck() : this(0.0, 0.1, 0.1, 1.0/3.0, 0.95, 0.85, Array.Empty<Flashcard>(), false) { }
 
         public void AddFlashcard(Flashcard card)
         {
@@ -75,16 +79,16 @@ namespace MemBoot
             {
                 double numerator = card.Mastery * (1 - SlippingProbability);
                 double denominator = (card.Mastery * (1 - SlippingProbability)) + ((1 - card.Mastery) * LuckyGuessProbability);
-                conditionalProbability = (float)(numerator / denominator);
+                conditionalProbability = numerator / denominator;
             }
             else
             {
                 double numerator = card.Mastery * SlippingProbability;
                 double denominator = (card.Mastery * SlippingProbability) + ((1 - card.Mastery) * (1 - LuckyGuessProbability));
-                conditionalProbability = (float)(numerator / denominator);
+                conditionalProbability = numerator / denominator;
             }
             double updatedMastery = conditionalProbability + (1 - conditionalProbability) * TransitionProbability;
-            card.Mastery = (float)updatedMastery;
+            card.Mastery = updatedMastery;
         }
 
         public void AnswerCorrectly(Flashcard card)
@@ -97,36 +101,59 @@ namespace MemBoot
             UpdateFlashcardMastery(card, false);
         }
 
-        private bool AllIntroducedFlashcardsAreMastered()
+        private IEnumerable<Flashcard> IntroducedSubset(IEnumerable<Flashcard> flashcards)
         {
-            var unmastered = IntroducedFlashcards().Where(card => card.Mastery < MasteryThreshold).Count();
-            return unmastered == 0;
+            return flashcards.Where(card => cardHasBeenIntroduced[card] == true);
         }
 
-        private IList<Flashcard> IntroducedFlashcards()
+        private IEnumerable<Flashcard> UnintroducedSubset(IEnumerable<Flashcard> flashcards)
         {
-            return cardHasBeenIntroduced.Where(kvp => kvp.Value).Select(kvp => kvp.Key).ToList();
+            return flashcards.Where(card => cardHasBeenIntroduced[card] == false);
         }
 
-        private IList<Flashcard> UnintroducedFlashcards()
+        private IEnumerable<Flashcard> MasteredSubset(IEnumerable<Flashcard> flashcards)
         {
-            return cardHasBeenIntroduced.Where(kvp => kvp.Value == false).Select(kvp => kvp.Key).ToList();
+            return flashcards.Where(card => card.Mastery >= MasteryThreshold);
         }
 
-        private IList<Flashcard> MasteredFlashcards()
+        private IEnumerable<Flashcard> UnmasteredSubset(IEnumerable<Flashcard> flashcards)
         {
-            return cards.Where(card => card.Mastery >= MasteryThreshold).ToList();
+            return flashcards.Where(card => card.Mastery < MasteryThreshold);
         }
 
-        private IList<Flashcard> UnmasteredFlashcards()
+        private IEnumerable<Flashcard> BeginnerSubset(IEnumerable<Flashcard> flashcards)
         {
-            return cards.Where(card => card.Mastery < MasteryThreshold).ToList();
+            return flashcards.Where(card => card.Mastery < CompetencyThreshold);
         }
 
         private void IntroduceFlashcard()
         {
-            var card = UnintroducedFlashcards().First();
-            cardHasBeenIntroduced[card] = true;
+            var unintroducedCards = UnintroducedSubset(cards);
+            if (unintroducedCards.Any())
+            {
+                var card = unintroducedCards.First();
+                cardHasBeenIntroduced[card] = true;
+                unintroducedCards = UnintroducedSubset(cards);
+                if (IntroducedSubset(cards).Count() == 1 && unintroducedCards.Any())
+                {
+                    // If this is the first introduced card, we want to introduce another card
+                    // (if one exists), simply to get variation in the beginning.
+                    card = unintroducedCards.First();
+                    cardHasBeenIntroduced[card] = true;
+                }
+            }
+        }
+
+        private static void GetWeights(IEnumerable<Flashcard> flashcards, out Dictionary<Flashcard, double> weights, out double weightSum)
+        {
+            weights = new Dictionary<Flashcard, double>();
+            weightSum = 0;
+            foreach (var card in flashcards)
+            {
+                var weight = Math.Pow(1 - card.Mastery, 1);
+                weights[card] = weight;
+                weightSum += weight;
+            }
         }
 
         public Flashcard? RandomIntroducedCard()
@@ -134,26 +161,59 @@ namespace MemBoot
             Flashcard? card = null;
             if (cards.Count > 0)
             {
-                if (AllIntroducedFlashcardsAreMastered())
+                card = cards.First();
+                var introducedCards = IntroducedSubset(cards);
+                if (!BeginnerSubset(introducedCards).Any())
                 {
+                    // If competency has been reached for all cards introduced so far, it's time to introduce another card.
                     IntroduceFlashcard();
                 }
-                if (IntroducedFlashcards().Count == 1 && UnintroducedFlashcards().Count > 0)
+                var masteredCards = MasteredSubset(introducedCards);
+                var unmasteredCards = UnmasteredSubset(introducedCards);
+                var numberOfMasteredCards = masteredCards.Count();
+                var numberOfUnmasteredCards = unmasteredCards.Count();
+                // When choosing a card, we mainly want to show still unmastered cards.
+                //
+                // Consider situation 1: 100 cards have been introduced, 10 are unmastered.
+                // In this situation we have enough unmastered cards to choose only among them.
+                //
+                // Situation 2: 100 introduced cards, 1 unmastered card. In this situation we want
+                // to interleave the practice of this unmastered card between a number N of reviews
+                // of mastered cards. We would probably not want N to be larger than, say, 3 or 4.
+                //
+                // In situation 1, we want a near 100 % chance of choosing among unmastered cards.
+                // In situation 2, we want a maybe 33 % chance of choosing among unmastered cards.
+                double threshold = Math.Sqrt(numberOfUnmasteredCards / 10.0);
+                var r = rnd.NextDouble();
+                if (r < threshold || numberOfMasteredCards == 0)
                 {
-                    IntroduceFlashcard();
-                }
-                var introduced = IntroducedFlashcards();
-                while (card == null)
-                {
-                    var i = rnd.Next(introduced.Count);
-                    var potentialCard = introduced[i];
-                    var r = (float)rnd.NextDouble();
-                    if (potentialCard.Mastery < r)
+                    // Select among unmastered.
+                    var listToUse = unmasteredCards.OrderBy(c => c.Mastery);
+                    GetWeights(listToUse, out Dictionary<Flashcard, double> weights, out double weightSum);
+                    r = rnd.NextDouble() * weightSum;
+                    double seenWeights = 0;
+                    foreach (var potentialCard in listToUse)
                     {
-                        card = potentialCard;
+                        seenWeights += weights[potentialCard];
+                        if (seenWeights >= r)
+                        {
+                            card = potentialCard;
+                            break;
+                        }
                     }
                 }
+                else
+                {
+                    var listToUse = masteredCards.ToList();
+                    var i = rnd.Next(listToUse.Count);
+                    card = listToUse[i];
+                }
             }
+            if (previouslyChosenCard == card)
+            {
+                card = RandomIntroducedCard();
+            }
+            previouslyChosenCard = card;
             return card;
         }
     }

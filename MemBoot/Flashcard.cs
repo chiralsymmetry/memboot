@@ -11,9 +11,9 @@ namespace MemBoot
         public string QuestionSide { get; set; }
         public string AnswerSide { get; set; }
 
-        public float Mastery { get; set; }
+        public double Mastery { get; set; }
 
-        public Flashcard(string question, string answer, float mastery = 0f)
+        public Flashcard(string question, string answer, double mastery = 0f)
         {
             QuestionSide = question;
             AnswerSide = answer;
