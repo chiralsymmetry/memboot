@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,49 @@ namespace MemBoot.Pages
     /// </summary>
     public partial class Answer : Page
     {
-        public Answer()
+        public Answer(DeckViewModel deckViewModel)
         {
             InitializeComponent();
+            DataContext = deckViewModel;
+            NavigateToString(QuestionBrowser, deckViewModel.HTMLQuestion).GetAwaiter().OnCompleted(() => { });
+            NavigateToString(AnswerBrowser, deckViewModel.HTMLAnswer).GetAwaiter().OnCompleted(() => { });
+            Loaded += Answer_Loaded;
+        }
+
+        private void Answer_Loaded(object sender, RoutedEventArgs e)
+        {
+            CorrectButton.Focus();
+        }
+
+        private static async Task NavigateToString(WebView2 browser, string html)
+        {
+            await browser.EnsureCoreWebView2Async();
+            browser.NavigateToString(html);
+        }
+
+        private void CorrectButton_Click(object sender, RoutedEventArgs e)
+        {
+            var deckViewModel = (DeckViewModel)DataContext;
+            deckViewModel.Good();
+            GoToNextQuestion();
+        }
+
+        private void IncorrectButton_Click(object sender, RoutedEventArgs e)
+        {
+            var deckViewModel = (DeckViewModel)DataContext;
+            deckViewModel.Bad();
+            GoToNextQuestion();
+        }
+
+        private void GoToNextQuestion()
+        {
+            var deckViewModel = (DeckViewModel)DataContext;
+            Question questionPage = new(deckViewModel);
+            NavigationService.Navigate(questionPage);
+            while (NavigationService.CanGoBack)
+            {
+                NavigationService.RemoveBackEntry();
+            }
         }
     }
 }

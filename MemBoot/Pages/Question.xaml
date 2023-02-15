@@ -4,8 +4,21 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MemBoot.Pages"
+      xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
       mc:Ignorable="d"
       Title="Question">
+    <Page.Resources>
+        <RoutedUICommand x:Key="ShowAnswer" />
+    </Page.Resources>
+    <Page.CommandBindings>
+        <CommandBinding Command="{StaticResource ShowAnswer}" Executed="ShowAnswerButton_Click" />
+    </Page.CommandBindings>
+    <Page.InputBindings>
+        <KeyBinding Key="Space" Command="{StaticResource ShowAnswer}" />
+        <KeyBinding Key="Up" Command="{StaticResource ShowAnswer}" />
+        <KeyBinding Key="Down" Command="{StaticResource ShowAnswer}" />
+        <KeyBinding Key="Left" Command="{StaticResource ShowAnswer}" />
+    </Page.InputBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -16,7 +29,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <WebBrowser Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" />
-        <Button Grid.Column="1" Grid.Row="1" Content="Show Answer" />
+        <wv2:WebView2 x:Name="QuestionBrowser" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Source="about:blank" />
+        <Button x:Name="ShowAnswerButton" Grid.Column="1" Grid.Row="1" Content="Show Answer" Click="ShowAnswerButton_Click" />
     </Grid>
 </Page>
