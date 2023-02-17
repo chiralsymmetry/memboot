@@ -8,12 +8,72 @@ using System.Text.Json.Serialization;
 using System.Diagnostics;
 using System.Windows.Controls;
 using System.Collections;
+using System.Text.RegularExpressions;
+using System.Net;
+using System.Windows.Media;
 
 namespace MemBoot
 {
     public static class DeckProcessor
     {
-        public static IEnumerable<Fact> IntroducedFacts(Deck deck, CardType cardType, IEnumerable<Fact> facts)
+        private readonly static Regex TemplateReplacement = new("{{([^}]+)}}", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Returns a collection of all <see cref="Field"/>s used in a <see cref="CardType"/>'s templates. 
+        /// </summary>
+        private static IEnumerable<Field> FieldsUsedByCardType(Deck deck, CardType cardType)
+        {
+            // A CardType's question or answer template take the form of strings
+            // containing "{{foo}}" where "foo" should be the name of a field.
+            // So we add all field objects and remove all those with names
+            // not found in the templates.
+            ICollection<Field> output = new HashSet<Field>(deck.Fields);
+            var template = $"{cardType.QuestionTemplate}{cardType.AnswerTemplate}";
+            MatchCollection matches = TemplateReplacement.Matches(template);
+            ICollection<string> fieldNames = new HashSet<string>();
+            foreach (Match match in matches.Cast<Match>())
+            {
+                var fieldName = match.Groups[1].Value;
+                fieldNames.Add(fieldName);
+            }
+            foreach (var field in output)
+            {
+                if (!fieldNames.Contains(field.Name))
+                {
+                    output.Remove(field);
+                }
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Returns a collection of usable <see cref="Fact"/>s, as a subset of supplied <see cref="Fact"/>s.
+        /// A <see cref="Fact"/> is considered usable for a given <see cref="CardType"/>
+        /// if the <see cref="Fact"/> has contents (empty string or not) for all <see cref="Field"/>s used by the <see cref="CardType"/>.
+        /// </summary>
+        private static IEnumerable<Fact> UsableFacts(Deck deck, CardType cardType, IEnumerable<Fact> facts)
+        {
+            // Add all Facts, then remove all Facts not using all Fields.
+            ICollection<Fact> output = new HashSet<Fact>(facts);
+            var fieldsUsed = FieldsUsedByCardType(deck, cardType);
+            foreach (var fact in output)
+            {
+                foreach (var field in fieldsUsed)
+                {
+                    if (!fact.FieldsContents.ContainsKey(field))
+                    {
+                        output.Remove(fact);
+                    }
+                }
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Returns a collection of introduced <see cref="Fact"/>s, as a subset of supplied <see cref="Fact"/>s.
+        /// A <see cref="CardType"/>-<see cref="Fact"/> combination counts as introduced when it has a mastery value in the supplied <see cref="Deck"/>.
+        /// </summary>
+        private static IEnumerable<Fact> IntroducedFacts(Deck deck, CardType cardType, IEnumerable<Fact> facts)
         {
             IEnumerable<Fact> output = Enumerable.Empty<Fact>();
             if (deck.MasteryRecords.ContainsKey(cardType))
@@ -25,19 +85,32 @@ namespace MemBoot
             return output;
         }
 
-        public static IEnumerable<Fact> UnintroducedFacts(Deck deck, CardType cardType, IEnumerable<Fact> facts)
+        /// <summary>
+        /// Returns a collection of still unintroduced <see cref="Fact"/>s, as a subset of supplied <see cref="Fact"/>s.
+        /// A <see cref="CardType"/>-<see cref="Fact"/> combination counts as unintroduced when it has no mastery value in the supplied <see cref="Deck"/>;
+        /// we also disregard all <see cref="Fact"/>s not usable with this <see cref="CardType"/>.
+        /// </summary>
+        private static IEnumerable<Fact> UnintroducedFacts(Deck deck, CardType cardType, IEnumerable<Fact> facts)
         {
-            IEnumerable<Fact> output = Enumerable.Empty<Fact>();
+            // Get all usable Facts, and remove all Facts without mastery values set.
+            ICollection<Fact> output = new HashSet<Fact>(UsableFacts(deck, cardType, facts));
             if (deck.MasteryRecords.ContainsKey(cardType))
             {
                 MasteryRecord results = deck.MasteryRecords[cardType];
-
-                output = facts.Where(f => !results.ContainsKey(f));
+                foreach (var fact in results.Keys)
+                {
+                    output.Remove(fact);
+                }
             }
             return output;
         }
 
-        public static IEnumerable<Fact> MasteredFacts(Deck deck, CardType cardType, IEnumerable<Fact> facts)
+        /// <summary>
+        /// Returns a collection of mastered <see cref="Fact"/>s, as a subset of supplied <see cref="Fact"/>s.
+        /// A <see cref="CardType"/>-<see cref="Fact"/> combination counts as mastered when it has a mastery value
+        /// in the supplied <see cref="Deck"/> not below the mastery threshold set in the <see cref="CardType"/>.
+        /// </summary>
+        private static IEnumerable<Fact> MasteredFacts(Deck deck, CardType cardType, IEnumerable<Fact> facts)
         {
             IEnumerable<Fact> output = Enumerable.Empty<Fact>();
             if (deck.MasteryRecords.ContainsKey(cardType))
@@ -48,7 +121,13 @@ namespace MemBoot
             return output;
         }
 
-        public static IEnumerable<Fact> UnmasteredFacts(Deck deck, CardType cardType, IEnumerable<Fact> facts)
+        /// <summary>
+        /// Returns a collection of still unmastered <see cref="Fact"/>s, as a subset of supplied <see cref="Fact"/>s.
+        /// A <see cref="CardType"/>-<see cref="Fact"/> combination counts as unmastered when it has a mastery value
+        /// in the supplied <see cref="Deck"/> below the mastery threshold set in the <see cref="CardType"/>,
+        /// or if it still unintroduced.
+        /// </summary>
+        private static IEnumerable<Fact> UnmasteredFacts(Deck deck, CardType cardType, IEnumerable<Fact> facts)
         {
             IEnumerable<Fact> output = Enumerable.Empty<Fact>();
             if (deck.MasteryRecords.ContainsKey(cardType))
@@ -59,7 +138,13 @@ namespace MemBoot
             return output;
         }
 
-        public static IEnumerable<Fact> BeginnerFacts(Deck deck, CardType cardType, IEnumerable<Fact> facts)
+        /// <summary>
+        /// Returns a collection of <see cref="Fact"/>s still at "beginner level", as a subset of supplied <see cref="Fact"/>s.
+        /// A <see cref="CardType"/>-<see cref="Fact"/> combination counts as being at beginner level when it has a mastery value
+        /// in the supplied <see cref="Deck"/> below the competency threshold set in the <see cref="CardType"/>,
+        /// or if it still unintroduced.
+        /// </summary>
+        private static IEnumerable<Fact> BeginnerFacts(Deck deck, CardType cardType, IEnumerable<Fact> facts)
         {
             IEnumerable<Fact> output = Enumerable.Empty<Fact>();
             if (deck.MasteryRecords.ContainsKey(cardType))
@@ -89,15 +174,15 @@ namespace MemBoot
             deck.MasteryRecords[cardType][fact] = mastery;
         }
 
-        public static void IntroduceFact(Deck deck, CardType cardType)
+        private static void IntroduceFact(Deck deck, CardType cardType, IEnumerable<Fact> facts)
         {
-            var unintroducedFacts = UnintroducedFacts(deck, cardType, deck.Facts);
+            var unintroducedFacts = UnintroducedFacts(deck, cardType, facts);
             if (unintroducedFacts.Any())
             {
                 var fact = unintroducedFacts.First();
                 SetMastery(deck, cardType, fact, cardType.InitialProbability);
-                unintroducedFacts = UnintroducedFacts(deck, cardType, deck.Facts);
-                if (IntroducedFacts(deck, cardType, deck.Facts).Count() == 1 & unintroducedFacts.Any())
+                unintroducedFacts = UnintroducedFacts(deck, cardType, facts);
+                if (IntroducedFacts(deck, cardType, facts).Count() == 1 & unintroducedFacts.Any())
                 {
                     // If this is the first introduced card, we want to introduce another card
                     // (if one exists), simply to get variation in the beginning.
@@ -113,31 +198,39 @@ namespace MemBoot
             weightSum = 0;
             foreach (Fact fact in facts)
             {
-                // Weight can also be Math.Pow(1 - mastery, N); the bigger the N,
+                // Math.Pow(1 - mastery, N): the bigger the N,
                 // the more the bias towards low-mastery facts.
-                var weight = GetMastery(deck, cardType, fact);
+                var weight = Math.Pow(1 - GetMastery(deck, cardType, fact), 2);
                 weights[fact] = weight;
                 weightSum += weight;
             }
         }
 
-        public static Fact? GetRandomFact(Random rnd, Deck deck, CardType cardType)
+        public static Fact? GetRandomFact(Random rnd, Deck deck, CardType cardType, Fact? previousFact = null)
         {
             Fact? fact = null;
-            if (deck.Facts.Count > 0)
+            var usableFacts = new HashSet<Fact>(UsableFacts(deck, cardType, deck.Facts));
+            if (previousFact != null)
             {
-                fact = deck.Facts.First();
-                var introducedFacts = IntroducedFacts(deck, cardType, deck.Facts);
-                if (!BeginnerFacts(deck, cardType, introducedFacts).Any())
+                usableFacts.Remove(previousFact);
+            }
+            if (usableFacts.Any())
+            {
+                // There exists at least one usable Fact that is not the previous Fact.
+                var introducedFacts = IntroducedFacts(deck, cardType, usableFacts);
+                if (!BeginnerFacts(deck, cardType, IntroducedFacts(deck, cardType, UsableFacts(deck, cardType, deck.Facts))).Any())
                 {
+                    // Reconstruct a collection of introduced and usable facts, and see
+                    // if there are any facts among them still not at competent level.
                     // If competency has been reached for all facts introduced so far,
                     // it's time to introduce another fact.
-                    IntroduceFact(deck, cardType);
+                    IntroduceFact(deck, cardType, usableFacts);
+                    introducedFacts = IntroducedFacts(deck, cardType, usableFacts);
                 }
                 var masteredFacts = MasteredFacts(deck, cardType, introducedFacts);
                 var unmasteredFacts = UnmasteredFacts(deck, cardType, introducedFacts);
                 var numberOfMasteredFacts = masteredFacts.Count();
-                var numberOfUnmasteredCards = unmasteredFacts.Count();
+                var numberOfUnmasteredFacts = unmasteredFacts.Count();
                 // When choosing a fact, we mainly want to show still unmastered facts.
                 //
                 // Consider situation 1: 100 facts have been introduced, 10 are unmastered.
@@ -149,12 +242,14 @@ namespace MemBoot
                 //
                 // In situation 1, we want a near 100 % chance of choosing among unmastered facts.
                 // In situation 2, we want a maybe 33 % chance of choosing among unmastered facts.
-                double threshold = Math.Sqrt(numberOfUnmasteredCards / 10.0);
+                //
+                // Note that Sqrt(x/10) == 100 % for x == 10, and ~32 % for x == 1.
+                double threshold = Math.Sqrt(numberOfUnmasteredFacts / 10.0);
                 var r = rnd.NextDouble();
                 if (r < threshold || numberOfMasteredFacts == 0)
                 {
                     // Select among unmastered.
-                    var listToUse = unmasteredFacts.OrderBy(f => GetMastery(deck, cardType, f));
+                    var listToUse = unmasteredFacts.OrderBy(f => GetMastery(deck, cardType, f));//rnd.NextDouble());//
                     GetWeights(deck, cardType, listToUse, out Dictionary<Fact, double> weights, out double weightSum);
                     r = rnd.NextDouble() * weightSum;
                     double seenWeights = 0;
@@ -170,11 +265,13 @@ namespace MemBoot
                 }
                 else
                 {
+                    // Select a mastered card, but not the previous one.
                     var listToUse = masteredFacts.ToList();
                     var i = rnd.Next(listToUse.Count);
                     fact = listToUse[i];
                 }
             }
+            fact ??= previousFact;
             return fact;
         }
 
@@ -196,6 +293,25 @@ namespace MemBoot
             }
             mastery = conditionalProbability + (1 - conditionalProbability) * cardType.TransitionProbability;
             SetMastery(deck, cardType, fact, mastery);
+        }
+
+        public static string DoTemplateReplacement(Deck deck, Fact fact, string template)
+        {
+            foreach (var field in deck.Fields)
+            {
+                var oldString = $"{{{{{field.Name}}}}}";
+                var newString = string.Empty;
+                if (fact.FieldsContents.ContainsKey(field))
+                {
+                    newString = fact.FieldsContents[field];
+                    if (!field.AllowHTML)
+                    {
+                        newString = WebUtility.HtmlEncode(newString);
+                    }
+                }
+                template = template.Replace(oldString, newString);
+            }
+            return template;
         }
 
         private static bool EqualityCheck<T>(ICollection<T> one, ICollection<T> other)
@@ -310,6 +426,7 @@ namespace MemBoot
             else if (!EqualityCheck(one.Keys, other.Keys)) { return false; }
 
             // Keys are confirmed equal.
+            // TODO: Use EqualityCheck(one.Keys, other.Keys) directly?
 
             foreach (var kvp in one)
             {

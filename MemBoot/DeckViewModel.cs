@@ -12,9 +12,12 @@ namespace MemBoot
 {
     public class DeckViewModel
     {
+        private readonly Random rnd = new();
         private readonly Deck deck;
-        private Flashcard? currentCard = null;
-        private string HTMLTemplate = @"<!DOCTYPE html>
+        private readonly CardType cardType;
+        private Fact? currentFact = null;
+
+        private readonly string HTMLTemplate = @"<!DOCTYPE html>
 	<head>
 		<meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8"">
 		<style>
@@ -49,9 +52,9 @@ namespace MemBoot
             get
             {
                 string output = string.Empty;
-                if (currentCard != null)
+                if (currentFact!= null)
                 {
-                    output = currentCard.QuestionSide;
+                    output = DeckProcessor.DoTemplateReplacement(deck, currentFact, cardType.QuestionTemplate);
                 }
                 return output;
             }
@@ -62,9 +65,9 @@ namespace MemBoot
             get
             {
                 string output = string.Empty;
-                if (currentCard != null)
+                if (currentFact != null)
                 {
-                    output = currentCard.AnswerSide;
+                    output = DeckProcessor.DoTemplateReplacement(deck, currentFact, cardType.AnswerTemplate);
                 }
                 return output;
             }
@@ -74,8 +77,7 @@ namespace MemBoot
         {
             get
             {
-                string q = WebUtility.HtmlEncode(CurrentQuestion);
-                string html = HTMLTemplate.Replace(ClassPlaceholder, "question").Replace(ContentsPlaceholder, q);
+                string html = HTMLTemplate.Replace(ClassPlaceholder, "question").Replace(ContentsPlaceholder, CurrentQuestion);
                 return html;
             }
         }
@@ -84,36 +86,36 @@ namespace MemBoot
         {
             get
             {
-                string a = WebUtility.HtmlEncode(CurrentAnswer);
-                string html = HTMLTemplate.Replace(ClassPlaceholder, "answer").Replace(ContentsPlaceholder, a);
+                string html = HTMLTemplate.Replace(ClassPlaceholder, "answer").Replace(ContentsPlaceholder, CurrentAnswer);
                 return html;
             }
         }
 
-        public DeckViewModel(Deck deck)
+        public DeckViewModel(Deck deck, CardType cardType)
         {
             this.deck = deck;
+            this.cardType = cardType;
         }
 
         public void Good()
         {
-            if (currentCard != null)
+            if (currentFact != null)
             {
-                deck.AnswerCorrectly(currentCard);
+                DeckProcessor.UpdateFactMastery(deck, cardType, currentFact, true);
             }
         }
 
         public void Bad()
         {
-            if (currentCard != null)
+            if (currentFact != null)
             {
-                deck.AnswerIncorrectly(currentCard);
+                DeckProcessor.UpdateFactMastery(deck, cardType, currentFact, false);
             }
         }
 
         public void Next()
         {
-            currentCard = deck.RandomIntroducedCard();
+            currentFact = DeckProcessor.GetRandomFact(rnd, deck, cardType, currentFact);
         }
     }
 }
