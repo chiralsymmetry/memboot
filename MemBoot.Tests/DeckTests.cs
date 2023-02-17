@@ -71,22 +71,32 @@ namespace MemBoot.Tests
             var cardType = deck.CardTypes.First();
             var frontField = deck.Fields.First(f => f.Name == "front");
 
+            Dictionary<Fact, int> firstRunHitCounts = new();
             Dictionary<Fact, int> hitCounts = new();
             Fact? fact;
             int times = 1000 * numberOfFacts;
-            int timesUntilAllMastered = 0;
             Random rnd = new();
 
             // Act
+            do
+            {
+                fact = DeckProcessor.GetRandomFact(rnd, deck, cardType);
+                if (fact != null)
+                {
+                    DeckProcessor.UpdateFactMastery(deck, cardType, fact, true);
+                    if (!firstRunHitCounts.ContainsKey(fact))
+                    {
+                        firstRunHitCounts[fact] = 0;
+                    }
+                    firstRunHitCounts[fact]++;
+                }
+            } while (fact != null && fact[frontField] != "_");
+
             for (int i = 0; i < times; i++)
             {
                 fact = DeckProcessor.GetRandomFact(rnd, deck, cardType);
                 if (fact != null)
                 {
-                    if (timesUntilAllMastered == 0 && fact[frontField] == "_")
-                    {
-                        timesUntilAllMastered = i;
-                    }
                     DeckProcessor.UpdateFactMastery(deck, cardType, fact, true);
                     if (!hitCounts.ContainsKey(fact))
                     {
@@ -97,23 +107,27 @@ namespace MemBoot.Tests
             }
 
             // Assert
+            var firstRunSum = firstRunHitCounts.Values.Sum();
+            var firstRunAverage = firstRunHitCounts.Values.Average();
+            var firstRunVariance = firstRunHitCounts.Values.Average(num => Math.Pow(num - firstRunAverage, 2));
+            var firstRunStdDev = Math.Sqrt(firstRunVariance);
+            // With default settings, a Fact should reach a competent level after 5 correct answers,
+            // and mastery after 6 correct answers (if no incorrect answers). Thus the sum of all
+            // answers until all N Facts are at a competent level is at the absolute minimum 5N.
+            // Since the algorithm interleaves cards, the average is actually about 7.75N, but
+            // due to randomness it can go as low as slightly below 6N, and as high as slightly
+            // below 11N. Variance can be high, but from experiments, we may expect standard
+            // deviation to never go as high as 9.
+            Assert.InRange(firstRunAverage, 5.5, 11.5);
+            Assert.InRange(firstRunStdDev, 0.25, 9.0);
 
-            // Each fact should be mastered by about 5 tries. But they shouldn't be shown
-            // repeatedly, so mastered facts should be shown in between. This means that
-            // earlier facts will have been shown the most, and newer facts the least.
-            // The average fact should be shown something like 18 times before all
-            // facts have been mastered.
-            double actualAverageHits = timesUntilAllMastered / (numberOfFacts - 1);
-            Assert.InRange(actualAverageHits, 14.0, 21.0);
-            // After working far beyond mastery, all facts should have been shown with
-            // near-same frequency.
-            actualAverageHits = times / numberOfFacts;
-            double low = actualAverageHits * 0.85;
-            double high = actualAverageHits * 1.15;
-            foreach (var hitCount in hitCounts)
-            {
-                Assert.InRange(hitCount.Value, low, high);
-            }
+            var totalAverage = hitCounts.Values.Average();
+            var totalVariance = hitCounts.Values.Average(num => Math.Pow(num - totalAverage, 2));
+            var totalStdDev = Math.Sqrt(totalVariance);
+            // When answering 1000N questions after all Facts reached a competent level,
+            // average answers per Fact is 1000 (obviously), and experiments show standard
+            // deviation above 15 and below 45.
+            Assert.InRange(totalStdDev, 15.0, 45.0);
         }
 
         [Fact]
