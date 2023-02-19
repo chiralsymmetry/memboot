@@ -1,0 +1,236 @@
+{
+  "Name": "Greek alphabet",
+  "Description": "",
+  "Fields": [
+    { "Name": "big_greek" },
+    { "Name": "small_greek" },
+    { "Name": "latin_name" },
+    { "Name": "latin_letter" }
+  ],
+  "Facts": [
+    {
+      "Id": "8682eb7e-7457-422a-81c5-16febd9f0f51",
+      "FieldsContents": {
+        "big_greek": "Α",
+        "small_greek": "α",
+        "latin_name": "alpha",
+        "latin_letter": "a"
+      }
+    },
+    {
+      "Id": "2710a0e0-5672-4626-b302-0c7ffb0cf8dd",
+      "FieldsContents": {
+        "big_greek": "Β",
+        "small_greek": "β",
+        "latin_name": "beta",
+        "latin_letter": "b"
+      }
+    },
+    {
+      "Id": "4c172e3a-290d-4adf-a422-aa5a74dc9e26",
+      "FieldsContents": {
+        "big_greek": "Γ",
+        "small_greek": "γ",
+        "latin_name": "gamma",
+        "latin_letter": "g"
+      }
+    },
+    {
+      "Id": "7b223deb-6b05-4bd3-9ff1-993c993df4b1",
+      "FieldsContents": {
+        "big_greek": "Δ",
+        "small_greek": "δ",
+        "latin_name": "delta",
+        "latin_letter": "d"
+      }
+    },
+    {
+      "Id": "cc81c879-8fe6-4fce-97d1-56530fb75e2f",
+      "FieldsContents": {
+        "big_greek": "Ε",
+        "small_greek": "ε",
+        "latin_name": "epsilon",
+        "latin_letter": "e"
+      }
+    },
+    {
+      "Id": "617d6975-f225-4e71-92bd-79a43fda0c9b",
+      "FieldsContents": {
+        "big_greek": "Ζ",
+        "small_greek": "ζ",
+        "latin_name": "zêta",
+        "latin_letter": "z"
+      }
+    },
+    {
+      "Id": "954c4715-edc8-4ea5-b9c7-b42602196442",
+      "FieldsContents": {
+        "big_greek": "Η",
+        "small_greek": "η",
+        "latin_name": "êta",
+        "latin_letter": "ê"
+      }
+    },
+    {
+      "Id": "5d9d54d7-27e3-4b86-a81e-c49abdc9b3bb",
+      "FieldsContents": {
+        "big_greek": "Θ",
+        "small_greek": "θ",
+        "latin_name": "thêta",
+        "latin_letter": "th"
+      }
+    },
+    {
+      "Id": "e5420dd1-f8eb-408d-8333-b7cd1bf34e6d",
+      "FieldsContents": {
+        "big_greek": "Ι",
+        "small_greek": "ι",
+        "latin_name": "iota",
+        "latin_letter": "i"
+      }
+    },
+    {
+      "Id": "9dfcc004-5e3d-43ec-96c6-36df88ed35a5",
+      "FieldsContents": {
+        "big_greek": "Κ",
+        "small_greek": "κ",
+        "latin_name": "kappa",
+        "latin_letter": "k"
+      }
+    },
+    {
+      "Id": "f0d53844-80e0-482f-8048-0e7fbbca9116",
+      "FieldsContents": {
+        "big_greek": "Λ",
+        "small_greek": "λ",
+        "latin_name": "lambda",
+        "latin_letter": "l"
+      }
+    },
+    {
+      "Id": "ad00811f-aa19-4bfd-a988-92515936a193",
+      "FieldsContents": {
+        "big_greek": "Μ",
+        "small_greek": "μ",
+        "latin_name": "mu",
+        "latin_letter": "m"
+      }
+    },
+    {
+      "Id": "3d58f42e-04f9-4a50-b4cf-c0048bf3a59a",
+      "FieldsContents": {
+        "big_greek": "Ν",
+        "small_greek": "ν",
+        "latin_name": "nu",
+        "latin_letter": "n"
+      }
+    },
+    {
+      "Id": "77980332-a4a9-42e8-ae8b-61dd3c0fa2f9",
+      "FieldsContents": {
+        "big_greek": "Ξ",
+        "small_greek": "ξ",
+        "latin_name": "xi",
+        "latin_letter": "ks"
+      }
+    },
+    {
+      "Id": "7c85d777-d014-4e4e-8c8d-488f0572c751",
+      "FieldsContents": {
+        "big_greek": "Ο",
+        "small_greek": "ο",
+        "latin_name": "omikron",
+        "latin_letter": "o"
+      }
+    },
+    {
+      "Id": "7e8676a3-19c5-4375-adfa-0cdd681d319a",
+      "FieldsContents": {
+        "big_greek": "Π",
+        "small_greek": "π",
+        "latin_name": "pi",
+        "latin_letter": "p"
+      }
+    },
+    {
+      "Id": "c6e127f2-bcd9-43f3-9e45-f93931988be1",
+      "FieldsContents": {
+        "big_greek": "Ρ",
+        "small_greek": "ρ",
+        "latin_name": "rho",
+        "latin_letter": "r"
+      }
+    },
+    {
+      "Id": "8cfa1475-51d8-4959-acc7-d0e1a9d505ef",
+      "FieldsContents": {
+        "big_greek": "Σ",
+        "small_greek": "σ",
+        "latin_name": "sigma",
+        "latin_letter": "s"
+      }
+    },
+    {
+      "Id": "7a80a4ab-7c56-4fec-893c-1f554b8e7b44",
+      "FieldsContents": {
+        "big_greek": "Τ",
+        "small_greek": "τ",
+        "latin_name": "tau",
+        "latin_letter": "t"
+      }
+    },
+    {
+      "Id": "db546c82-540b-40f4-8eea-fe64dec8626b",
+      "FieldsContents": {
+        "big_greek": "Υ",
+        "small_greek": "υ",
+        "latin_name": "upsilon",
+        "latin_letter": "u"
+      }
+    },
+    {
+      "Id": "505fe2f4-46ce-45b5-8e04-6679734829b6",
+      "FieldsContents": {
+        "big_greek": "Φ",
+        "small_greek": "φ",
+        "latin_name": "phi",
+        "latin_letter": "f"
+      }
+    },
+    {
+      "Id": "a741eb6c-fb5e-4e5b-974c-f54cff452d47",
+      "FieldsContents": {
+        "big_greek": "Χ",
+        "small_greek": "χ",
+        "latin_name": "chi",
+        "latin_letter": "ch"
+      }
+    },
+    {
+      "Id": "f5c33c1c-2b45-4754-ac66-a55270b1229a",
+      "FieldsContents": {
+        "big_greek": "Ψ",
+        "small_greek": "ψ",
+        "latin_name": "psi",
+        "latin_letter": "ps"
+      }
+    },
+    {
+      "Id": "98fb3d41-67d9-441e-90be-9432e132f7d2",
+      "FieldsContents": {
+        "big_greek": "Ω",
+        "small_greek": "ω",
+        "latin_name": "omega",
+        "latin_letter": "ô"
+      }
+    }
+  ],
+  "CardTypes": [
+    {
+      "Id": "3a32ecec-d63c-4ede-a36a-d26cb97ff86a",
+      "Name": "Small Greek to Latin",
+      "QuestionTemplate": "{{small_greek}}",
+      "AnswerTemplate": "{{latin_name}} ({{latin_letter}})"
+    }
+  ]
+}

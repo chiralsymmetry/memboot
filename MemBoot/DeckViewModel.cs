@@ -17,7 +17,7 @@ namespace MemBoot
         private readonly CardType cardType;
         private Fact? currentFact = null;
 
-        private readonly string HTMLTemplate = @"<!DOCTYPE html>
+        private readonly string HTMLTemplatePart1 = @"<!DOCTYPE html>
 	<head>
 		<meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8"">
 		<style>
@@ -26,9 +26,13 @@ namespace MemBoot
 			}
 			.container {
 				display: flex;
+				height: 100vh;
+			}
+			.column {
+				flex: 1;
+				display: flex;
 				align-items: center;
 				justify-content: center;
-				height: 100vh;
 			}
 			.question, .answer {
 				font-size: 32px;
@@ -39,13 +43,26 @@ namespace MemBoot
 		</style>
 	</head>
 	<body>
-		<div class=""container"">
-			<div class=""CLASS_GOES_HERE"">CONTENTS_GO_HERE</div>
-		</div>
+		<div class=""container"">";
+        private readonly string HTMLTemplatePart2 = @"		</div>
 	</body>
 </html>";
-        private readonly string ClassPlaceholder = "CLASS_GOES_HERE";
-        private readonly string ContentsPlaceholder = "CONTENTS_GO_HERE";
+
+
+        private string GetHTMLTemplate(IList<string> columnClasses, IList<string> columnContents)
+        {
+            string columns = string.Empty;
+            for (int i = 0; i < columnClasses.Count; i++)
+            {
+                string column = @"			<div class=""column"">
+				<div class=""columnClass"">columnContent</div>
+			</div>";
+                column = column.Replace("columnClass", columnClasses[i]);
+                column = column.Replace("columnContent", columnContents[i]);
+                columns += column;
+            }
+            return $"{HTMLTemplatePart1}{Environment.NewLine}{columns}{Environment.NewLine}{HTMLTemplatePart2}";
+        }
 
         public string CurrentQuestion
         {
@@ -77,16 +94,16 @@ namespace MemBoot
         {
             get
             {
-                string html = HTMLTemplate.Replace(ClassPlaceholder, "question").Replace(ContentsPlaceholder, CurrentQuestion);
+                string html = GetHTMLTemplate(new string[] { "question" }, new string[] { CurrentQuestion });
                 return html;
             }
         }
 
-        public string HTMLAnswer
+        public string HTMLQuestionAndAnswer
         {
             get
             {
-                string html = HTMLTemplate.Replace(ClassPlaceholder, "answer").Replace(ContentsPlaceholder, CurrentAnswer);
+                string html = GetHTMLTemplate(new string[] { "question", "answer" }, new string[] { CurrentQuestion, CurrentAnswer });
                 return html;
             }
         }

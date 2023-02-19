@@ -1,0 +1,46 @@
+﻿<Page x:Class="MemBoot.Pages.FlashcardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MemBoot.Pages"
+      xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Flashcard">
+    <Page.Resources>
+        <RoutedUICommand x:Key="AcceptCommand" />
+        <RoutedUICommand x:Key="DeclineCommand" />
+    </Page.Resources>
+    <Page.CommandBindings>
+        <CommandBinding Command="{StaticResource AcceptCommand}" Executed="AcceptCommandBinding_Executed" />
+        <CommandBinding Command="{StaticResource DeclineCommand}" Executed="DeclineCommandBinding_Executed" />
+    </Page.CommandBindings>
+    <Page.InputBindings>
+        <KeyBinding Key="Left" Command="{StaticResource AcceptCommand}" />
+        <KeyBinding Key="Right" Command="{StaticResource DeclineCommand}" />
+        <KeyBinding Key="Up" Command="{StaticResource AcceptCommand}" />
+        <KeyBinding Key="Down" Command="{StaticResource DeclineCommand}" />
+        <KeyBinding Key="Space" Command="{StaticResource AcceptCommand}" />
+        <KeyBinding Key="Esc" Command="{StaticResource DeclineCommand}" />
+    </Page.InputBindings>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <wv2:WebView2 x:Name="Browser" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Source="about:blank" />
+        <StackPanel x:Name="QuestionButtons" Grid.Column="1" Grid.Row="1">
+            <Button x:Name="ShowAnswerButton" Content="Show Answer" Click="ShowAnswerButton_Click" />
+        </StackPanel>
+        <StackPanel x:Name="AnswerButtons" Grid.Column="1" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="CorrectButton" Content="I Was Right!" Margin="0 0 10 0" Background="#d9ead3" Click="CorrectButton_Click" />
+            <Button x:Name="IncorrectButton" Content="I Was Wrong..." Margin="10 0 0 0" Background="#f4cccc" Click="IncorrectButton_Click" />
+        </StackPanel>
+    </Grid>
+</Page>
