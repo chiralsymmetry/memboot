@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,12 +24,14 @@ namespace MemBoot.Pages
     public partial class Main : Page
     {
         private readonly DeckStorage deckStorage = new();
+        private readonly string saveFilePath;
         public ObservableCollection<Tuple<Deck, CardType>> StoredCardTypes { get; }
 
         public Main()
         {
             InitializeComponent();
             StoredCardTypes = new ObservableCollection<Tuple<Deck, CardType>>(deckStorage.GetCardTypes());
+            saveFilePath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "memboot.json");
         }
 
         private void ImportButton_Click(object sender, RoutedEventArgs e)
@@ -60,7 +63,7 @@ namespace MemBoot.Pages
             if ((sender as Button)?.DataContext is Tuple<Deck, CardType> pick)
             {
                 var (deck, cardType) = pick;
-                var deckViewModel = new DeckViewModel(new StoredDeck(deck!, cardType!));
+                var deckViewModel = new DeckViewModel(new StoredDeck(deck!, cardType!, saveFilePath));
 
                 FlashcardPage page = new(deckViewModel);
                 NavigationService.Navigate(page);

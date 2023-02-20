@@ -11,12 +11,14 @@ namespace MemBoot
         private readonly Random rnd = new();
         private readonly Deck deck;
         private readonly CardType cardType;
+        private readonly string savePath;
         private Fact? currentFact = null;
 
-        public StoredDeck(Deck deck, CardType cardType)
+        public StoredDeck(Deck deck, CardType cardType, string savePath)
         {
             this.deck = deck;
             this.cardType = cardType;
+            this.savePath = savePath;
         }
 
         string IDeck.CurrentQuestion
@@ -50,6 +52,7 @@ namespace MemBoot
             if (currentFact != null)
             {
                 DeckProcessor.UpdateFactMastery(deck, cardType, currentFact, true);
+                SaveDeck();
             }
         }
 
@@ -58,12 +61,18 @@ namespace MemBoot
             if (currentFact != null)
             {
                 DeckProcessor.UpdateFactMastery(deck, cardType, currentFact, false);
+                SaveDeck();
             }
         }
 
         public void Next()
         {
             currentFact = DeckProcessor.GetRandomFact(rnd, deck, cardType, currentFact);
+        }
+
+        private void SaveDeck()
+        {
+            DeckProcessor.ExportFile(deck, savePath);
         }
     }
 }

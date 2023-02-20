@@ -11,6 +11,7 @@ using System.Collections;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Windows.Media;
+using System.IO;
 
 namespace MemBoot
 {
@@ -564,6 +565,20 @@ namespace MemBoot
                 Converters = { new DeckConverter() }
             };
             return JsonSerializer.Serialize(deck, options);
+        }
+
+        public static bool ExportFile(Deck deck, string path)
+        {
+            var output = false;
+
+            var json = ToJson(deck);
+            if (json != null)
+            {
+                using StreamWriter writer = new(path);
+                writer.Write(json);
+            }
+
+            return output;
         }
     }
 
