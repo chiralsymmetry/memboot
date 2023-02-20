@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -21,23 +22,52 @@ namespace MemBoot.Pages
     /// </summary>
     public partial class Main : Page
     {
+        private readonly DeckStorage deckStorage = new();
+        public ObservableCollection<Tuple<Deck, CardType>> StoredCardTypes { get; }
+
         public Main()
         {
             InitializeComponent();
+            StoredCardTypes = new ObservableCollection<Tuple<Deck, CardType>>(deckStorage.GetCardTypes());
         }
 
-        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        private void ImportButton_Click(object sender, RoutedEventArgs e)
         {
-            var json = System.IO.File.ReadAllText("sample.json");
-            var deck = DeckProcessor.FromJson(json);
-            var cardType = deck!.CardTypes.First();
-            var deckViewModel = new DeckViewModel(deck, cardType);
-
-            FlashcardPage page = new(deckViewModel);
-            NavigationService.Navigate(page);
-            while (NavigationService.CanGoBack)
+            var dialog = new Microsoft.Win32.OpenFileDialog
             {
-                NavigationService.RemoveBackEntry();
+                FileName = "Document",
+                DefaultExt = ".json",
+                Filter = "MemBoot deck (.json)|*.json"
+            };
+
+            bool? result = dialog.ShowDialog();
+            if (result == true)
+            {
+                deckStorage.ImportFile(dialog.FileName);
+                var cardTypes = deckStorage.GetCardTypes();
+                foreach (var cardType in cardTypes)
+                {
+                    if (!StoredCardTypes.Contains(cardType))
+                    {
+                        StoredCardTypes.Add(cardType);
+                    }
+                }
+            }
+        }
+
+        private void CardTypeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.DataContext is Tuple<Deck, CardType> pick)
+            {
+                var (deck, cardType) = pick;
+                var deckViewModel = new DeckViewModel(deck!, cardType!);
+
+                FlashcardPage page = new(deckViewModel);
+                NavigationService.Navigate(page);
+                while (NavigationService.CanGoBack)
+                {
+                    NavigationService.RemoveBackEntry();
+                }
             }
         }
     }
