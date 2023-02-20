@@ -12,10 +12,7 @@ namespace MemBoot
 {
     public class DeckViewModel
     {
-        private readonly Random rnd = new();
-        private readonly Deck deck;
-        private readonly CardType cardType;
-        private Fact? currentFact = null;
+        private readonly IDeck deck;
 
         private readonly string HTMLTemplatePart1 = @"<!DOCTYPE html>
 	<head>
@@ -64,37 +61,11 @@ namespace MemBoot
             return $"{HTMLTemplatePart1}{Environment.NewLine}{columns}{Environment.NewLine}{HTMLTemplatePart2}";
         }
 
-        public string CurrentQuestion
-        {
-            get
-            {
-                string output = string.Empty;
-                if (currentFact!= null)
-                {
-                    output = DeckProcessor.DoTemplateReplacement(deck, currentFact, cardType.QuestionTemplate);
-                }
-                return output;
-            }
-        }
-
-        public string CurrentAnswer
-        {
-            get
-            {
-                string output = string.Empty;
-                if (currentFact != null)
-                {
-                    output = DeckProcessor.DoTemplateReplacement(deck, currentFact, cardType.AnswerTemplate);
-                }
-                return output;
-            }
-        }
-
         public string HTMLQuestion
         {
             get
             {
-                string html = GetHTMLTemplate(new string[] { "question" }, new string[] { CurrentQuestion });
+                string html = GetHTMLTemplate(new string[] { "question" }, new string[] { deck.CurrentQuestion });
                 return html;
             }
         }
@@ -103,36 +74,29 @@ namespace MemBoot
         {
             get
             {
-                string html = GetHTMLTemplate(new string[] { "question", "answer" }, new string[] { CurrentQuestion, CurrentAnswer });
+                string html = GetHTMLTemplate(new string[] { "question", "answer" }, new string[] { deck.CurrentQuestion, deck.CurrentAnswer });
                 return html;
             }
         }
 
-        public DeckViewModel(Deck deck, CardType cardType)
+        public DeckViewModel(IDeck deck)
         {
             this.deck = deck;
-            this.cardType = cardType;
         }
 
         public void Good()
         {
-            if (currentFact != null)
-            {
-                DeckProcessor.UpdateFactMastery(deck, cardType, currentFact, true);
-            }
+            deck.AnswerCorrectly();
         }
 
         public void Bad()
         {
-            if (currentFact != null)
-            {
-                DeckProcessor.UpdateFactMastery(deck, cardType, currentFact, false);
-            }
+            deck.AnswerIncorrectly();
         }
 
         public void Next()
         {
-            currentFact = DeckProcessor.GetRandomFact(rnd, deck, cardType, currentFact);
+            deck.Next();
         }
     }
 }

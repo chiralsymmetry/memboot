@@ -60,7 +60,7 @@ namespace MemBoot.Pages
             if ((sender as Button)?.DataContext is Tuple<Deck, CardType> pick)
             {
                 var (deck, cardType) = pick;
-                var deckViewModel = new DeckViewModel(deck!, cardType!);
+                var deckViewModel = new DeckViewModel(new StoredDeck(deck!, cardType!));
 
                 FlashcardPage page = new(deckViewModel);
                 NavigationService.Navigate(page);
