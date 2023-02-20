@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -183,13 +184,39 @@ namespace MemBoot.Tests
         }
 
         [Fact]
+        public void EqualityCheckForChangedDecksShouldGiveFalse()
+        {
+            // Arrange
+            Deck one = CreateAToZDeck();
+            var cardType = one.CardTypes.First();
+            var fact = one.Facts.First();
+            string jsonBeforeChange = DeckProcessor.ToJson(one);
+            Deck? other = DeckProcessor.FromJson(jsonBeforeChange);
+            bool expectedEquality = false;
+
+            // Act
+            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
+            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
+            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
+            bool actualEquality = DeckProcessor.EqualityCheck(one, other!);
+
+            // Assert
+            Assert.Equal(expectedEquality, actualEquality);
+        }
+
+        [Fact]
         public void JsonSerializingAndDeserializingShouldGiveEqualDecks()
         {
             // Arrange
             Deck one = CreateAToZDeck();
+            var cardType = one.CardTypes.First();
+            var fact = one.Facts.First();
             bool expectedEquality = true;
 
             // Act
+            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
+            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
+            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
             string json = DeckProcessor.ToJson(one);
             Deck? other = DeckProcessor.FromJson(json);
             bool actualEquality = DeckProcessor.EqualityCheck(one, other!);

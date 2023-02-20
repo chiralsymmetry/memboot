@@ -934,7 +934,7 @@ namespace MemBoot
                 {
                     Converters = { new MasteryRecordsConverter(output.CardTypes, output.Facts) }
                 };
-                output.Facts = JsonSerializer.Deserialize<ICollection<Fact>>(factsJson, options) ?? output.Facts;
+                output.MasteryRecords = JsonSerializer.Deserialize<IDictionary<CardType, MasteryRecord>>(masteryJson, options) ?? output.MasteryRecords;
             }
 
             return output;
