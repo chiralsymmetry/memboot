@@ -1,4 +1,5 @@
-﻿using MemBoot.Pages;
+﻿using MemBoot.Core;
+using MemBoot.Pages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,9 +11,9 @@ using System.Windows.Media;
 
 namespace MemBoot
 {
-    public class DeckViewModel
+    public class FlashcardViewModel
     {
-        private readonly IDeck deck;
+        private IFlashcard flashcard;
 
         private readonly string HTMLTemplatePart1 = @"<!DOCTYPE html>
 	<head>
@@ -45,7 +46,6 @@ namespace MemBoot
 	</body>
 </html>";
 
-
         private string GetHTMLTemplate(IList<string> columnClasses, IList<string> columnContents)
         {
             string columns = string.Empty;
@@ -65,7 +65,7 @@ namespace MemBoot
         {
             get
             {
-                string html = GetHTMLTemplate(new string[] { "question" }, new string[] { deck.CurrentQuestion });
+                string html = GetHTMLTemplate(new string[] { "question" }, new string[] { flashcard.CurrentQuestion });
                 return html;
             }
         }
@@ -74,29 +74,29 @@ namespace MemBoot
         {
             get
             {
-                string html = GetHTMLTemplate(new string[] { "question", "answer" }, new string[] { deck.CurrentQuestion, deck.CurrentAnswer });
+                string html = GetHTMLTemplate(new string[] { "question", "answer" }, new string[] { flashcard.CurrentQuestion, flashcard.CurrentAnswer });
                 return html;
             }
         }
 
-        public DeckViewModel(IDeck deck)
+        public FlashcardViewModel(IFlashcard flashcard)
         {
-            this.deck = deck;
+            this.flashcard = flashcard;
         }
 
         public void Good()
         {
-            deck.AnswerCorrectly();
+            flashcard.AnswerCorrectly();
         }
 
         public void Bad()
         {
-            deck.AnswerIncorrectly();
+            flashcard.AnswerIncorrectly();
         }
 
         public void Next()
         {
-            deck.Next();
+            flashcard = flashcard.Next();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MemBoot
+namespace MemBoot.Core.Models
 {
     public class MasteryRecord : IDictionary<Fact, double>
     {

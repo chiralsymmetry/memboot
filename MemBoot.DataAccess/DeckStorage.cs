@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MemBoot.Core.Models;
+using MemBoot.DataAccess.Json;
 
-namespace MemBoot
+namespace MemBoot.DataAccess
 {
     public class DeckStorage
     {
@@ -21,7 +23,7 @@ namespace MemBoot
             if (System.IO.File.Exists(path))
             {
                 var json = System.IO.File.ReadAllText(path);
-                var deck = DeckProcessor.FromJson(json);
+                var deck = JsonDeck.FromJson(json);
                 if (deck != null)
                 {
                     decks.Add(deck);

@@ -15,6 +15,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MemBoot.Core.Models;
+using MemBoot.DataAccess;
+using MemBoot.DataAccess.Json;
 
 namespace MemBoot.Pages
 {
@@ -63,7 +66,8 @@ namespace MemBoot.Pages
             if ((sender as Button)?.DataContext is Tuple<Deck, CardType> pick)
             {
                 var (deck, cardType) = pick;
-                var deckViewModel = new DeckViewModel(new StoredDeck(deck!, cardType!, saveFilePath));
+                var jsonDeck = new JsonDeck(deck!, cardType!, saveFilePath);
+                var deckViewModel = new FlashcardViewModel(jsonDeck);
 
                 FlashcardPage page = new(deckViewModel);
                 NavigationService.Navigate(page);

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MemBoot.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MemBoot
+namespace MemBoot.Core.Models
 {
     public class Fact
     {
@@ -54,6 +55,15 @@ namespace MemBoot
             {
                 FieldsContents[kvp.Key] = kvp.Value;
             }
+        }
+
+        public bool IsFunctionallyEqualTo(Fact other)
+        {
+            if (this == other) { return true; }
+            if (this == null || other == null) { return false; }
+            if (Id != other.Id) { return false; }
+            if (!FieldsContents.IsFunctionallyEqualTo(other.FieldsContents)) { return false; }
+            return true;
         }
     }
 }

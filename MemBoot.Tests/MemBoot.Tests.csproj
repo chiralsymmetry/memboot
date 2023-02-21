@@ -22,7 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MemBoot\MemBoot.csproj" />
+    <ProjectReference Include="..\MemBoot.Core\MemBoot.Core.csproj" />
+    <ProjectReference Include="..\MemBoot\MemBoot.WPF.csproj" />
   </ItemGroup>
 
 </Project>

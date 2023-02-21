@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualBasic;
+﻿using MemBoot.Core.Extensions;
+using MemBoot.Core.Models;
+using MemBoot.DataAccess.Json;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -81,10 +84,10 @@ namespace MemBoot.Tests
             // Act
             do
             {
-                fact = DeckProcessor.GetRandomFact(rnd, deck, cardType);
+                fact = deck.GetRandomFact(rnd, cardType);
                 if (fact != null)
                 {
-                    DeckProcessor.UpdateFactMastery(deck, cardType, fact, true);
+                    deck.UpdateFactMastery(cardType, fact, true);
                     if (!firstRunHitCounts.ContainsKey(fact))
                     {
                         firstRunHitCounts[fact] = 0;
@@ -95,10 +98,10 @@ namespace MemBoot.Tests
 
             for (int i = 0; i < times; i++)
             {
-                fact = DeckProcessor.GetRandomFact(rnd, deck, cardType);
+                fact = deck.GetRandomFact(rnd, cardType);
                 if (fact != null)
                 {
-                    DeckProcessor.UpdateFactMastery(deck, cardType, fact, true);
+                    deck.UpdateFactMastery(cardType, fact, true);
                     if (!hitCounts.ContainsKey(fact))
                     {
                         hitCounts[fact] = 0;
@@ -162,7 +165,7 @@ namespace MemBoot.Tests
             bool expectedEquality = true;
 
             // Act
-            bool actualEquality = DeckProcessor.EqualityCheck(one, other);
+            bool actualEquality = one.IsFunctionallyEqualTo(other);
 
             // Assert
             Assert.Equal(expectedEquality, actualEquality);
@@ -177,7 +180,7 @@ namespace MemBoot.Tests
             bool expectedEquality = false;
 
             // Act
-            bool actualEquality = DeckProcessor.EqualityCheck(one, other);
+            bool actualEquality = one.IsFunctionallyEqualTo(other);
 
             // Assert
             Assert.Equal(expectedEquality, actualEquality);
@@ -190,15 +193,15 @@ namespace MemBoot.Tests
             Deck one = CreateAToZDeck();
             var cardType = one.CardTypes.First();
             var fact = one.Facts.First();
-            string jsonBeforeChange = DeckProcessor.ToJson(one);
-            Deck? other = DeckProcessor.FromJson(jsonBeforeChange);
+            string jsonBeforeChange = JsonDeck.ToJson(one);
+            Deck? other = JsonDeck.FromJson(jsonBeforeChange);
             bool expectedEquality = false;
 
             // Act
-            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
-            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
-            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
-            bool actualEquality = DeckProcessor.EqualityCheck(one, other!);
+            one.UpdateFactMastery(cardType, fact, true);
+            one.UpdateFactMastery(cardType, fact, true);
+            one.UpdateFactMastery(cardType, fact, true);
+            bool actualEquality = one.IsFunctionallyEqualTo(other!);
 
             // Assert
             Assert.Equal(expectedEquality, actualEquality);
@@ -214,12 +217,12 @@ namespace MemBoot.Tests
             bool expectedEquality = true;
 
             // Act
-            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
-            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
-            DeckProcessor.UpdateFactMastery(one, cardType, fact, true);
-            string json = DeckProcessor.ToJson(one);
-            Deck? other = DeckProcessor.FromJson(json);
-            bool actualEquality = DeckProcessor.EqualityCheck(one, other!);
+            one.UpdateFactMastery(cardType, fact, true);
+            one.UpdateFactMastery(cardType, fact, true);
+            one.UpdateFactMastery(cardType, fact, true);
+            string json = JsonDeck.ToJson(one);
+            Deck? other = JsonDeck.FromJson(json);
+            bool actualEquality = one.IsFunctionallyEqualTo(other!);
 
             // Assert
             Assert.Equal(expectedEquality, actualEquality);

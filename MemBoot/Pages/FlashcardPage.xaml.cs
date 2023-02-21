@@ -28,9 +28,9 @@ namespace MemBoot.Pages
         }
 
         private Mode CurrentMode;
-        private readonly DeckViewModel DeckViewModel;
+        private readonly FlashcardViewModel DeckViewModel;
 
-        public FlashcardPage(DeckViewModel deckViewModel)
+        public FlashcardPage(FlashcardViewModel deckViewModel)
         {
             InitializeComponent();
 

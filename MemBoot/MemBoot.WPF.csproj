@@ -12,6 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MemBoot.Core\MemBoot.Core.csproj" />
+    <ProjectReference Include="..\MemBoot.DataAccess\MemBoot.DataAccess.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="sample.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
