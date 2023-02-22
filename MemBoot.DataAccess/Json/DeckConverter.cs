@@ -22,7 +22,11 @@ namespace MemBoot.DataAccess.Json
                 {
                     string propertyName = reader.GetString() ?? "";
                     reader.Read();
-                    if (propertyName == nameof(Deck.Name))
+                    if (propertyName == nameof(Deck.Id))
+                    {
+                        output.Id = JsonSerializer.Deserialize<Guid>(ref reader, options);
+                    }
+                    else if (propertyName == nameof(Deck.Name))
                     {
                         var value = reader.GetString();
                         output.Name = value ?? output.Name;
@@ -94,6 +98,10 @@ namespace MemBoot.DataAccess.Json
             };
 
             writer.WriteStartObject();
+
+            var deckId = JsonSerializer.Serialize(deck.Id, options);
+            writer.WritePropertyName(nameof(Deck.Id));
+            writer.WriteRawValue(deckId, true);
 
             writer.WriteString(nameof(Deck.Name), deck.Name);
             writer.WriteString(nameof(Deck.Description), deck.Description);

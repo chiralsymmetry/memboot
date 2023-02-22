@@ -11,6 +11,7 @@ namespace MemBoot.Core.Models
 {
     public class Deck
     {
+        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public ICollection<Field> Fields { get; set; } = new List<Field>();
@@ -23,6 +24,7 @@ namespace MemBoot.Core.Models
         {
             if (this == other) { return true; }
             if (this == null || other == null) { return false; }
+            if (Id != other.Id) { return false; }
             if (Name != other.Name) { return false; }
             if (Description != other.Description) { return false; }
             if (!Fields.IsFunctionallyEqualTo(other.Fields)) { return false; }
