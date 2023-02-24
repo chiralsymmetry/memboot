@@ -99,6 +99,19 @@ namespace MemBoot.DataAccess.Json
             return JsonSerializer.Serialize(deck, options);
         }
 
+        public static Deck? ImportFile(string path)
+        {
+            Deck? output = null;
+
+            if (File.Exists(path))
+            {
+                var json = File.ReadAllText(path);
+                output = FromJson(json);
+            }
+
+            return output;
+        }
+
         public static bool ExportFile(Deck deck, string path)
         {
             var output = false;

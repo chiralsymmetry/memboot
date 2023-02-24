@@ -24,6 +24,11 @@ namespace MemBoot.Core.Models
             }
         }
 
+        public Fact(Guid id)
+        {
+            Id = id;
+        }
+
         public Fact(Guid id, IEnumerable<Field> fields)
         {
             Id = id;

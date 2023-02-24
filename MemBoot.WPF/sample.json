@@ -232,6 +232,24 @@
       "Name": "Small Greek to Latin",
       "QuestionTemplate": "{{small_greek}}",
       "AnswerTemplate": "{{latin_name}} ({{latin_letter}})"
+    },
+    {
+      "Id": "d5c1f3e2-019c-46a4-87ac-08bd037143e7",
+      "Name": "Big Greek to Latin",
+      "QuestionTemplate": "{{big_greek}}",
+      "AnswerTemplate": "{{latin_name}} ({{latin_letter}})"
+    },
+    {
+      "Id": "eb220298-caa0-45e2-a06d-5bf4ae8c608f",
+      "Name": "Latin to small Greek",
+      "QuestionTemplate": "{{latin_name}} ({{latin_letter}})",
+      "AnswerTemplate": "{{small_greek}}"
+    },
+    {
+      "Id": "44e94ee6-e3e8-40ca-9c8a-b7727e72f2ac",
+      "Name": "Latin to big Greek",
+      "QuestionTemplate": "{{latin_name}} ({{latin_letter}})",
+      "AnswerTemplate": "{{big_greek}}"
     }
   ]
 }

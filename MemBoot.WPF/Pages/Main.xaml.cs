@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 using MemBoot.Core.Models;
 using MemBoot.DataAccess;
 using MemBoot.DataAccess.Json;
+using MemBoot.DataAccess.Sqlite;
 
 namespace MemBoot.Pages
 {
@@ -26,15 +27,27 @@ namespace MemBoot.Pages
     /// </summary>
     public partial class Main : Page
     {
-        private readonly DeckStorage deckStorage = new();
-        private readonly string saveFilePath;
-        public ObservableCollection<Tuple<Deck, CardType>> StoredCardTypes { get; }
+        private readonly IDeckStorage deckStorage;
+        public ObservableCollection<Tuple<string, Guid>> StoredCardTypes { get; }
 
         public Main()
         {
             InitializeComponent();
-            StoredCardTypes = new ObservableCollection<Tuple<Deck, CardType>>(deckStorage.GetCardTypes());
-            saveFilePath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "memboot.json");
+
+            this.deckStorage = new SqliteDeckStorage("Data Source=MemBoot.db;Version=3;");
+
+            StoredCardTypes = new ObservableCollection<Tuple<string, Guid>>();
+
+            RefillStoredCardTypes();
+        }
+
+        private void RefillStoredCardTypes()
+        {
+            StoredCardTypes.Clear();
+            foreach (var cardTypeNameId in deckStorage.GetCardTypeIds())
+            {
+                StoredCardTypes.Add(cardTypeNameId);
+            }
         }
 
         private void ImportButton_Click(object sender, RoutedEventArgs e)
@@ -49,13 +62,13 @@ namespace MemBoot.Pages
             bool? result = dialog.ShowDialog();
             if (result == true)
             {
-                deckStorage.ImportFile(dialog.FileName);
-                var cardTypes = deckStorage.GetCardTypes();
-                foreach (var cardType in cardTypes)
+                Deck? newDeck = JsonDeck.ImportFile(dialog.FileName);
+                if (newDeck != null)
                 {
-                    if (!StoredCardTypes.Contains(cardType))
+                    var success = deckStorage.AddDeck(newDeck);
+                    if (success)
                     {
-                        StoredCardTypes.Add(cardType);
+                        RefillStoredCardTypes();
                     }
                 }
             }
@@ -63,17 +76,18 @@ namespace MemBoot.Pages
 
         private void CardTypeButton_Click(object sender, RoutedEventArgs e)
         {
-            if ((sender as Button)?.DataContext is Tuple<Deck, CardType> pick)
+            if ((sender as Button)?.DataContext is Tuple<string, Guid> pick)
             {
-                var (deck, cardType) = pick;
-                var jsonDeck = new JsonDeck(deck!, cardType!, saveFilePath);
-                var deckViewModel = new FlashcardViewModel(jsonDeck);
-
-                FlashcardPage page = new(deckViewModel);
-                NavigationService.Navigate(page);
-                while (NavigationService.CanGoBack)
+                var flashcard = deckStorage.GetFlashcard(pick.Item2);
+                if (flashcard != null)
                 {
-                    NavigationService.RemoveBackEntry();
+                    var deckViewModel = new FlashcardViewModel(flashcard);
+                    FlashcardPage page = new(deckViewModel);
+                    NavigationService.Navigate(page);
+                    while (NavigationService.CanGoBack)
+                    {
+                        NavigationService.RemoveBackEntry();
+                    }
                 }
             }
         }
