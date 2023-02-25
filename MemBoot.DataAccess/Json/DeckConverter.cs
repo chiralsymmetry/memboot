@@ -1,6 +1,6 @@
-﻿using System.Text.Json;
+﻿using MemBoot.Core.Models;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using MemBoot.Core.Models;
 
 namespace MemBoot.DataAccess.Json
 {

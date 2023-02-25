@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using MemBoot.Core;
-using MemBoot.Core.Extensions;
+﻿using MemBoot.Core;
 using MemBoot.Core.Models;
-using Microsoft.VisualBasic;
+using System.Text.Json;
 
 namespace MemBoot.DataAccess.Json
 {
@@ -38,7 +31,7 @@ namespace MemBoot.DataAccess.Json
                 return output;
             }
         }
-        
+
         public string CurrentAnswer
         {
             get

@@ -1,15 +1,8 @@
 ﻿using Dapper;
 using MemBoot.Core;
 using MemBoot.Core.Models;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MemBoot.DataAccess.Sqlite
 {
@@ -53,7 +46,8 @@ namespace MemBoot.DataAccess.Sqlite
                     }
 
                     sql = @"INSERT INTO cardtypes (deck_id, id, name, question_template, answer_template, styling, initial_probability, transition_probability, slipping_probability, lucky_guess_probability, mastery_threshold, competency_threshold, cards_are_composable) VALUES (@DeckId, @Id, @Name, @QuestionTemplate, @AnswerTemplate, @Styling, @InitialProbability, @TransitionProbability, @SlippingProbability, @LuckyGuessProbability, @MasteryThreshold, @CompetencyThreshold, @CardsAreComposable);";
-                    output &= connection.Execute(sql, deck.CardTypes.Select(ct => new {
+                    output &= connection.Execute(sql, deck.CardTypes.Select(ct => new
+                    {
                         DeckId = deck.Id,
                         ct.Id,
                         ct.Name,

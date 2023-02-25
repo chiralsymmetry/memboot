@@ -1,14 +1,5 @@
-﻿using MemBoot.Core.Extensions;
-using MemBoot.Core.Models;
+﻿using MemBoot.Core.Models;
 using MemBoot.DataAccess.Json;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace MemBoot.Tests
 {

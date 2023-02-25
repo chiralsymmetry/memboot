@@ -1,11 +1,4 @@
-﻿using MemBoot.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MemBoot.Core
+﻿namespace MemBoot.Core
 {
     public interface IFlashcard
     {

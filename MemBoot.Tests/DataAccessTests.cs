@@ -2,13 +2,6 @@
 using MemBoot.Core.Models;
 using MemBoot.DataAccess;
 using MemBoot.DataAccess.Sqlite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit.Sdk;
 
 namespace MemBoot.Tests
 {
