@@ -72,17 +72,17 @@ namespace MemBoot.DataAccess.Sqlite
             {
                 var parameters = new { cardTypeId = cardType.Id, factId = fact.Id, mastery };
 
-                string sql = @"SELECT sort_id FROM mastery_records WHERE cardtype_id = @cardTypeId AND fact_id = @factId;";
+                string sql = "SELECT sort_id FROM mastery_records WHERE cardtype_id = @cardTypeId AND fact_id = @factId;";
                 var hit = connection.Query(sql, parameters).Any();
 
                 if (hit)
                 {
-                    sql = @"UPDATE mastery_records SET mastery = @mastery WHERE cardtype_id = @cardTypeId AND fact_id = @factId;";
+                    sql = "UPDATE mastery_records SET mastery = @mastery WHERE cardtype_id = @cardTypeId AND fact_id = @factId;";
                     connection.Execute(sql, parameters);
                 }
                 else
                 {
-                    sql = @"INSERT INTO mastery_records (cardtype_id, fact_id, mastery) VALUES (@cardTypeId, @factId, @mastery);";
+                    sql = "INSERT INTO mastery_records (cardtype_id, fact_id, mastery) VALUES (@cardTypeId, @factId, @mastery);";
                     connection.Execute(sql, parameters);
                 }
             }

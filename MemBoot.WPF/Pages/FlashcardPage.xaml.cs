@@ -90,7 +90,10 @@ namespace MemBoot.Pages
 
         private void AcceptCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (CurrentMode == Mode.Question) SetAnswerMode();
+            if (CurrentMode == Mode.Question)
+            {
+                SetAnswerMode();
+            }
             else
             {
                 DeckViewModel.Good();
@@ -100,7 +103,10 @@ namespace MemBoot.Pages
 
         private void DeclineCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (CurrentMode == Mode.Question) SetAnswerMode();
+            if (CurrentMode == Mode.Question)
+            {
+                SetAnswerMode();
+            }
             else
             {
                 DeckViewModel.Bad();

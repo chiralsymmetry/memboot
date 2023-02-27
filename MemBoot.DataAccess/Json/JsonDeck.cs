@@ -114,6 +114,7 @@ namespace MemBoot.DataAccess.Json
             {
                 using StreamWriter writer = new(path);
                 writer.Write(json);
+                output = true;
             }
 
             return output;

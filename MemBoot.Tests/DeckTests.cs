@@ -104,7 +104,7 @@ namespace MemBoot.Tests
                     }
                 }
             }
-            bool expectedEquality = true;
+            const bool expectedEquality = true;
 
             // Act
             bool actualEquality = one.IsFunctionallyEqualTo(other);
@@ -119,7 +119,7 @@ namespace MemBoot.Tests
             // Arrange
             Deck one = DeckTestHelpers.CreateAToZDeck();
             Deck other = DeckTestHelpers.CreateAToZDeck();
-            bool expectedEquality = false;
+            const bool expectedEquality = false;
 
             // Act
             bool actualEquality = one.IsFunctionallyEqualTo(other);
@@ -137,7 +137,7 @@ namespace MemBoot.Tests
             var fact = one.Facts.First();
             string jsonBeforeChange = JsonDeck.ToJson(one);
             Deck? other = JsonDeck.FromJson(jsonBeforeChange);
-            bool expectedEquality = false;
+            const bool expectedEquality = false;
 
             // Act
             one.UpdateFactMastery(cardType, fact, true);
@@ -156,7 +156,7 @@ namespace MemBoot.Tests
             Deck one = DeckTestHelpers.CreateAToZDeck();
             var cardType = one.CardTypes.First();
             var fact = one.Facts.First();
-            bool expectedEquality = true;
+            const bool expectedEquality = true;
 
             // Act
             one.UpdateFactMastery(cardType, fact, true);

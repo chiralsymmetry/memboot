@@ -107,16 +107,16 @@ namespace MemBoot.Core.Models
             if (wasCorrect)
             {
                 double numerator = mastery * (1 - cardType.SlippingProbability);
-                double denominator = mastery * (1 - cardType.SlippingProbability) + (1 - mastery) * cardType.LuckyGuessProbability;
+                double denominator = (mastery * (1 - cardType.SlippingProbability)) + ((1 - mastery) * cardType.LuckyGuessProbability);
                 conditionalProbability = numerator / denominator;
             }
             else
             {
                 double numerator = mastery * cardType.SlippingProbability;
-                double denominator = mastery * cardType.SlippingProbability + (1 - mastery) * (1 - cardType.LuckyGuessProbability);
+                double denominator = (mastery * cardType.SlippingProbability) + ((1 - mastery) * (1 - cardType.LuckyGuessProbability));
                 conditionalProbability = numerator / denominator;
             }
-            mastery = conditionalProbability + (1 - conditionalProbability) * cardType.TransitionProbability;
+            mastery = conditionalProbability + ((1 - conditionalProbability) * cardType.TransitionProbability);
             SetMastery(cardType, fact, mastery);
         }
 
@@ -140,7 +140,7 @@ namespace MemBoot.Core.Models
         }
 
         /// <summary>
-        /// Returns a collection of all <see cref="Field"/>s used in a <see cref="CardType"/>'s templates. 
+        /// Returns a collection of all <see cref="Field"/>s used in a <see cref="CardType"/>'s templates.
         /// </summary>
         private IEnumerable<Field> FieldsUsedByCardType(CardType cardType)
         {
@@ -303,7 +303,7 @@ namespace MemBoot.Core.Models
                 var fact = unintroducedFacts.First();
                 SetMastery(cardType, fact, cardType.InitialProbability);
                 unintroducedFacts = UnintroducedFacts(cardType, facts);
-                if (IntroducedFacts(cardType, facts).Count() == 1 & unintroducedFacts.Any())
+                if (IntroducedFacts(cardType, facts).Count() == 1 && unintroducedFacts.Any())
                 {
                     // If this is the first introduced card, we want to introduce another card
                     // (if one exists), simply to get variation in the beginning.

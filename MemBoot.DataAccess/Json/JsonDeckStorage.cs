@@ -5,7 +5,6 @@ namespace MemBoot.DataAccess.Json
 {
     public class JsonDeckStorage : IDeckStorage
     {
-
         private readonly ICollection<Deck> decks;
         private readonly string saveFilePath;
 

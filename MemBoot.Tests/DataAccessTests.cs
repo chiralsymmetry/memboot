@@ -7,7 +7,7 @@ namespace MemBoot.Tests
 {
     public class DataAccessTests
     {
-        private static readonly string databaseFileName = "MemBoot.Tests.db";
+        private const string databaseFileName = "MemBoot.Tests.db";
 
         private static void DeleteDatabaseBefore()
         {

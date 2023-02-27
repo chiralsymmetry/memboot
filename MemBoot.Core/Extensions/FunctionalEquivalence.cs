@@ -67,19 +67,19 @@ namespace MemBoot.Core.Extensions
                 {
                     var oneField = oneItem as Field;
                     var otherField = otherItem as Field;
-                    if (!oneField!.IsFunctionallyEqualTo(otherField!)) { return false; };
+                    if (!oneField!.IsFunctionallyEqualTo(otherField!)) { return false; }
                 }
                 else if (oneItem is Fact)
                 {
                     var oneFact = oneItem as Fact;
                     var otherFact = otherItem as Fact;
-                    if (!oneFact!.IsFunctionallyEqualTo(otherFact!)) { return false; };
+                    if (!oneFact!.IsFunctionallyEqualTo(otherFact!)) { return false; }
                 }
                 else if (oneItem is CardType)
                 {
                     var oneCardType = oneItem as CardType;
                     var otherCardType = otherItem as CardType;
-                    if (!oneCardType!.IsFunctionallyEqualTo(otherCardType!)) { return false; };
+                    if (!oneCardType!.IsFunctionallyEqualTo(otherCardType!)) { return false; }
                 }
                 else
                 {

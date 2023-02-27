@@ -5,7 +5,7 @@ namespace MemBoot.Core.Models
 {
     public class MasteryRecord : IDictionary<Fact, double>
     {
-        private IDictionary<Fact, double> BackingDictionary { get; set; } = new Dictionary<Fact, double>();
+        private IDictionary<Fact, double> BackingDictionary { get; } = new Dictionary<Fact, double>();
         public double this[Fact fact] { get => BackingDictionary[fact]; set => BackingDictionary[fact] = value; }
 
         public ICollection<Fact> Keys => BackingDictionary.Keys;
