@@ -132,6 +132,7 @@ namespace MemBoot.Core.Models
                     if (!field.AllowHTML)
                     {
                         newString = WebUtility.HtmlEncode(newString);
+                        // TODO: Convert linebreaks and repeated spaces to HTML. (Anything else?)
                     }
                 }
                 template = template.Replace(oldString, newString);
