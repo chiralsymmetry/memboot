@@ -17,6 +17,7 @@ namespace MemBoot.WPF
         {
             this.deck = deck;
             Fields = new(deck.Fields);
+            CardTypes = new(deck.CardTypes);
         }
 
         public string Name
@@ -73,5 +74,7 @@ namespace MemBoot.WPF
             }
             deck.Fields.Remove(field);
         }
+
+        public ObservableCollection<CardType> CardTypes { get; }
     }
 }

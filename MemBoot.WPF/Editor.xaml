@@ -8,7 +8,10 @@
         Title="Editor" Height="450" Width="1000">
     <Window.Resources>
         <DataTemplate x:Key="FieldListTemplate">
-            <TextBlock Grid.Column="0" Text="{Binding Name}"/>
+            <TextBlock Text="{Binding Name}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="CardTypeListTemplate">
+            <TextBlock Text="{Binding Name}"/>
         </DataTemplate>
     </Window.Resources>
     <Grid>
@@ -74,17 +77,17 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <ListBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                <ListBox x:Name="CardTypesListBox" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" ItemsSource="{Binding CardTypes}" ItemTemplate="{StaticResource CardTypeListTemplate}"/>
                 <Button Grid.Row="2" Grid.Column="0">Add</Button>
                 <Button Grid.Row="2" Grid.Column="1">Remove</Button>
                 
                 <Label Grid.Row="0" Grid.Column="2">Name</Label>
-                <TextBox Grid.Row="0" Grid.Column="3"/>
+                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding SelectedItem.Name, ElementName=CardTypesListBox}"/>
                 
                 <Label Grid.Row="1" Grid.Column="2">Question Template</Label>
                 <Label Grid.Row="1" Grid.Column="3">Answer Template</Label>
-                <TextBox Grid.Row="2" Grid.Column="2"/>
-                <TextBox Grid.Row="2" Grid.Column="3"/>
+                <TextBox Grid.Row="2" Grid.Column="2" AcceptsReturn="True" Text="{Binding SelectedItem.QuestionTemplate, ElementName=CardTypesListBox}"/>
+                <TextBox Grid.Row="2" Grid.Column="3" AcceptsReturn="True" Text="{Binding SelectedItem.AnswerTemplate, ElementName=CardTypesListBox}"/>
             </Grid>
         </GroupBox>
         <GroupBox Header="Facts" Grid.Row="1" Grid.Column="0">
