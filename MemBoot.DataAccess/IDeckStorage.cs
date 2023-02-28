@@ -9,5 +9,6 @@ namespace MemBoot.DataAccess
         Deck? GetDeck(Guid deckId);
         ICollection<Tuple<string, Guid>> GetCardTypeIds();
         IFlashcard? GetFlashcard(Guid cardTypeId);
+        Deck? GetDeckFromCardTypeId(Guid cardTypeId);
     }
 }

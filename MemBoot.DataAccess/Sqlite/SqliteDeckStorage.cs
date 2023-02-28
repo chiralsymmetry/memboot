@@ -220,5 +220,10 @@ namespace MemBoot.DataAccess.Sqlite
             }
             return output;
         }
+
+        public Deck? GetDeckFromCardTypeId(Guid cardTypeId)
+        {
+            return GetDeckFromId(cardTypeId: cardTypeId);
+        }
     }
 }

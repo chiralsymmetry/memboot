@@ -2,6 +2,7 @@
 using MemBoot.DataAccess;
 using MemBoot.DataAccess.Json;
 using MemBoot.DataAccess.Sqlite;
+using MemBoot.WPF;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -76,6 +77,20 @@ namespace MemBoot.Pages
                     {
                         NavigationService.RemoveBackEntry();
                     }
+                }
+            }
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as Button)?.DataContext is Tuple<string, Guid> pick)
+            {
+                var deck = deckStorage.GetDeckFromCardTypeId(pick.Item2);
+                if (deck != null)
+                {
+                    var editWindow = new Editor(new(deck));
+                    editWindow.ShowDialog();
+                    RefillStoredCardTypes();
                 }
             }
         }

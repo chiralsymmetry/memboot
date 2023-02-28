@@ -55,5 +55,26 @@ namespace MemBoot.DataAccess.Json
 
             return output;
         }
+
+        public Deck? GetDeckFromCardTypeId(Guid cardTypeId)
+        {
+            Deck? output = null;
+            foreach (var deck in decks)
+            {
+                foreach (var cardType in deck.CardTypes)
+                {
+                    if (cardType.Id.Equals(cardTypeId))
+                    {
+                        output = deck;
+                        break;
+                    }
+                }
+                if (output != null)
+                {
+                    break;
+                }
+            }
+            return output;
+        }
     }
 }
