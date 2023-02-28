@@ -43,49 +43,35 @@ namespace MemBoot.WPF
             }
         }
 
-        public ObservableFieldCollection Fields { get; }
+        public ObservableCollection<Field> Fields { get; }
 
         internal void CreateNewField()
         {
             string newName = string.Empty;
             {
-                string nameBase = "New Field";
+                const string nameBase = "New Field";
                 int number = 1;
                 newName = nameBase;
-                var occupied = deck.Fields.Where(f => f.Name == newName).Any();
+                var occupied = deck.Fields.Any(f => f.Name == newName);
                 while (occupied)
                 {
                     newName = $"{nameBase} {number++}";
-                    occupied = deck.Fields.Where(f => f.Name == newName).Any();
+                    occupied = deck.Fields.Any(f => f.Name == newName);
                 }
             }
             var newField = new Field(newName);
             deck.Fields.Add(newField);
             Fields.Add(newField);
         }
-    }
-    public class ObservableFieldCollection : ObservableCollection<Field>
-    {
-        public ObservableFieldCollection(IEnumerable<Field> collection) : base(collection)
-        {
-        }
 
-        protected override void InsertItem(int index, Field item)
+        internal void RemoveField(Field field)
         {
-            base.InsertItem(index, item);
-            Debug.WriteLine("Insert");
-        }
-
-        protected override void RemoveItem(int index)
-        {
-            base.RemoveItem(index);
-            Debug.WriteLine("Remove");
-        }
-
-        protected override void SetItem(int index, Field item)
-        {
-            base.SetItem(index, item);
-            Debug.WriteLine("Set");
+            Fields.Remove(field);
+            foreach (var fact in deck.Facts)
+            {
+                fact.FieldsContents.Remove(field);
+            }
+            deck.Fields.Remove(field);
         }
     }
 }

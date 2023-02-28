@@ -49,7 +49,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <ListBox x:Name="FieldsListBox" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" ItemsSource="{Binding Fields}" ItemTemplate="{StaticResource FieldListTemplate}" SelectionChanged="ListBox_SelectionChanged" />
+                <ListBox x:Name="FieldsListBox" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" ItemsSource="{Binding Fields}" ItemTemplate="{StaticResource FieldListTemplate}" />
                 <Button Grid.Row="2" Grid.Column="0" Click="AddFieldButton_Click">Add</Button>
                 <Button Grid.Row="2" Grid.Column="1" Click="RemoveFieldButton_Click">Remove</Button>
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2">

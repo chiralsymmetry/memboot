@@ -29,14 +29,6 @@ namespace MemBoot.WPF
             DataContext = deckViewModel;
         }
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if ((sender as ListBox)?.SelectedItem is Field field)
-            {
-               // deckViewModel.CurrentField = field;
-            }
-        }
-
         private void AddFieldButton_Click(object sender, RoutedEventArgs e)
         {
             deckViewModel.CreateNewField();
@@ -44,7 +36,14 @@ namespace MemBoot.WPF
 
         private void RemoveFieldButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (FieldsListBox.SelectedItem is Field field)
+            {
+                var result = MessageBox.Show("This will remove information from any fact currently using this field. Continue?", "Remove Field", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+                if (result == MessageBoxResult.Yes)
+                {
+                    deckViewModel.RemoveField(field);
+                }
+            }
         }
     }
 }
