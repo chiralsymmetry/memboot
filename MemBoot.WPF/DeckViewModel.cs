@@ -76,5 +76,31 @@ namespace MemBoot.WPF
         }
 
         public ObservableCollection<CardType> CardTypes { get; }
+
+        internal void CreateCardType()
+        {
+            string newName = string.Empty;
+            {
+                const string nameBase = "New Card Type";
+                int number = 1;
+                newName = nameBase;
+                var occupied = deck.CardTypes.Any(ct => ct.Name == newName);
+                while (occupied)
+                {
+                    newName = $"{nameBase} {number++}";
+                    occupied = deck.CardTypes.Any(ct => ct.Name == newName);
+                }
+            }
+            var newCardType = new CardType(Guid.NewGuid(), newName, "", "");
+            deck.CardTypes.Add(newCardType);
+            CardTypes.Add(newCardType);
+        }
+
+        internal void RemoveCardType(CardType cardType)
+        {
+            CardTypes.Remove(cardType);
+            deck.MasteryRecords.Remove(cardType);
+            deck.CardTypes.Remove(cardType);
+        }
     }
 }

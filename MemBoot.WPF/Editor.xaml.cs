@@ -45,5 +45,18 @@ namespace MemBoot.WPF
                 }
             }
         }
+
+        private void AddCardTypeButton_Click(object sender, RoutedEventArgs e)
+        {
+            deckViewModel.CreateCardType();
+        }
+
+        private void RemoveCardTypeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CardTypesListBox.SelectedItem is CardType cardType)
+            {
+                deckViewModel.RemoveCardType(cardType);
+            }
+        }
     }
 }
