@@ -86,5 +86,15 @@ namespace MemBoot.WPF
         {
             RefreshColumnHeaders();
         }
+
+        private void AddFactButton_Click(object sender, RoutedEventArgs e)
+        {
+            deckViewModel.CreateNewFact();
+        }
+
+        private void RemoveFactButton_Click(object sender, RoutedEventArgs e)
+        {
+            deckViewModel.RemoveFacts(FactsDataGrid.SelectedItems.Cast<Fact>().ToList());
+        }
     }
 }

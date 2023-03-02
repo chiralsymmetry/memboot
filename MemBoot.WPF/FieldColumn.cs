@@ -12,6 +12,7 @@ namespace MemBoot.WPF
         public readonly Field OriginalField;
         private static readonly Brush UsedCellBackground = Brushes.White;
         private static readonly Brush UnusedCellBackground = new SolidColorBrush(new Color() { A = 0xFF, R = 0xEE, G = 0xEE, B = 0xEE });
+        private static readonly Brush ActiveCellBackground = new SolidColorBrush(Color.FromRgb(224, 255, 255));
 
         public FieldColumn(Field field)
         {
@@ -43,6 +44,18 @@ namespace MemBoot.WPF
                 {
                     textBox.Background = UnusedCellBackground;
                 }
+                textBox.GotFocus += (sender, e) =>
+                {
+                    if (sender is TextBox tb)
+                    {
+                        tb.Background = ActiveCellBackground;
+                    }
+                };
+                cell.GotFocus += (sender, e) =>
+                {
+                    textBox.Focus();
+                    textBox.CaretIndex = textBox.Text.Length;
+                };
                 textBox.LostFocus += (sender, e) =>
                 {
                     if (sender is TextBox tb)
@@ -55,7 +68,7 @@ namespace MemBoot.WPF
                         else
                         {
                             fact.FieldsContents.Remove(OriginalField);
-                            textBox.Background = UnusedCellBackground;
+                            tb.Background = UnusedCellBackground;
                         }
                     }
                 };
@@ -70,7 +83,7 @@ namespace MemBoot.WPF
 
         protected override FrameworkElement GenerateEditingElement(DataGridCell cell, object dataItem)
         {
-            throw new NotImplementedException();
+            return GenerateElement(cell, dataItem);
         }
 
         protected override object PrepareCellForEdit(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)

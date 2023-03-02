@@ -1,5 +1,6 @@
 ﻿using MemBoot.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -101,5 +102,21 @@ namespace MemBoot.WPF
         }
 
         public ObservableCollection<Fact> Facts { get; }
+
+        internal void CreateNewFact()
+        {
+            var newFact = new Fact(Guid.NewGuid());
+            deck.Facts.Add(newFact);
+            Facts.Add(newFact);
+        }
+
+        internal void RemoveFacts(IEnumerable<Fact> selectedFacts)
+        {
+            foreach (var fact in selectedFacts)
+            {
+                deck.Facts.Remove(fact);
+                Facts.Remove(fact);
+            }
+        }
     }
 }
