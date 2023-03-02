@@ -1,37 +1,26 @@
 ﻿using MemBoot.Core.Models;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MemBoot.WPF
 {
-    /// <summary>
-    /// Interaction logic for Editor.xaml
-    /// </summary>
     public partial class Editor : Window
     {
-        private DeckViewModel deckViewModel;
+        private readonly DeckViewModel deckViewModel;
         public Editor(DeckViewModel deckViewModel)
         {
             InitializeComponent();
             this.deckViewModel = deckViewModel;
             DataContext = deckViewModel;
+            RemakeColumns();
         }
 
         private void AddFieldButton_Click(object sender, RoutedEventArgs e)
         {
             deckViewModel.CreateNewField();
+            RemakeColumns();
         }
 
         private void RemoveFieldButton_Click(object sender, RoutedEventArgs e)
@@ -42,6 +31,7 @@ namespace MemBoot.WPF
                 if (result == MessageBoxResult.Yes)
                 {
                     deckViewModel.RemoveField(field);
+                    RemakeColumns();
                 }
             }
         }
@@ -57,6 +47,44 @@ namespace MemBoot.WPF
             {
                 deckViewModel.RemoveCardType(cardType);
             }
+        }
+
+        private void RefreshColumnHeaders()
+        {
+            foreach (var column in FactsDataGrid.Columns.Cast<FieldColumn>().ToList())
+            {
+                column.RefreshHeader();
+            }
+        }
+
+        private void RemakeColumns()
+        {
+            var availableFields = new HashSet<Field>(deckViewModel.Fields);
+            var existingColumns = FactsDataGrid.Columns.Cast<DataGridColumn>().ToList();
+            foreach (var existingColumn in existingColumns)
+            {
+                if (existingColumn is FieldColumn fieldColumn)
+                {
+                    if (availableFields.Contains(fieldColumn.OriginalField))
+                    {
+                        fieldColumn.RefreshHeader();
+                        availableFields.Remove(fieldColumn.OriginalField);
+                    }
+                    else
+                    {
+                        FactsDataGrid.Columns.Remove(existingColumn);
+                    }
+                }
+            }
+            foreach (var unusedField in availableFields)
+            {
+                FactsDataGrid.Columns.Add(new FieldColumn(unusedField));
+            }
+        }
+
+        private void FieldNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            RefreshColumnHeaders();
         }
     }
 }

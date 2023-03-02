@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MemBoot.WPF"
         mc:Ignorable="d"
-        Title="Editor" Height="450" Width="1000">
+        Title="Editor" Height="1000" Width="1000">
     <Window.Resources>
         <DataTemplate x:Key="FieldListTemplate">
             <TextBlock Text="{Binding Name}"/>
@@ -52,12 +52,12 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <ListBox x:Name="FieldsListBox" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" ItemsSource="{Binding Fields}" ItemTemplate="{StaticResource FieldListTemplate}" />
+                <ListBox x:Name="FieldsListBox" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" ItemsSource="{Binding Fields}" ItemTemplate="{StaticResource FieldListTemplate}"/>
                 <Button Grid.Row="2" Grid.Column="0" Click="AddFieldButton_Click">Add</Button>
                 <Button Grid.Row="2" Grid.Column="1" Click="RemoveFieldButton_Click">Remove</Button>
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2">
                     <Label>Name</Label>
-                    <TextBox Text="{Binding SelectedItem.Name, ElementName=FieldsListBox}"/>
+                    <TextBox Text="{Binding SelectedItem.Name, ElementName=FieldsListBox, UpdateSourceTrigger=PropertyChanged}" TextChanged="FieldNameTextBox_TextChanged"/>
                 </StackPanel>
                 <CheckBox Grid.Row="1" Grid.Column="2" IsChecked="{Binding SelectedItem.AllowHTML, ElementName=FieldsListBox}">HTML</CheckBox>
             </Grid>
@@ -133,7 +133,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <DataGrid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
+                <DataGrid x:Name="FactsDataGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding Facts}" AutoGenerateColumns="False"/>
                 <Button Grid.Row="1" Grid.Column="0">Add</Button>
                 <Button Grid.Row="1" Grid.Column="1">Remove</Button>
             </Grid>

@@ -1,10 +1,6 @@
 ﻿using MemBoot.Core.Models;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 
 namespace MemBoot.WPF
@@ -18,6 +14,7 @@ namespace MemBoot.WPF
             this.deck = deck;
             Fields = new(deck.Fields);
             CardTypes = new(deck.CardTypes);
+            Facts = new(deck.Facts);
         }
 
         public string Name
@@ -102,5 +99,7 @@ namespace MemBoot.WPF
             deck.MasteryRecords.Remove(cardType);
             deck.CardTypes.Remove(cardType);
         }
+
+        public ObservableCollection<Fact> Facts { get; }
     }
 }
