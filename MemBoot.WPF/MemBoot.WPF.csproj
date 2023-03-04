@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="sample.cyrillic.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="sample.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

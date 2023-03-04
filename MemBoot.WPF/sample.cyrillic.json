@@ -1,0 +1,318 @@
+{
+  "Id": "5436facc-71df-429b-8709-e4dc7e5bc962",
+  "Name": "Russian alphabet",
+  "Description": "",
+  "Fields": [
+    { "Name": "big_russian" },
+    { "Name": "small_russian" },
+    { "Name": "latin" },
+    { "Name": "pronunciation" }
+  ],
+  "Facts": [
+    {
+      "Id": "0eaf4dd3-8a88-4540-855a-62215fc4d999",
+      "FieldsContents": {
+        "big_russian": "А",
+        "small_russian": "а",
+        "latin": "a",
+        "pronunciation": "[ɐ]"
+      }
+    },
+    {
+      "Id": "e7886a8c-e191-40e4-bc54-5566667abf8b",
+      "FieldsContents": {
+        "big_russian": "Б",
+        "small_russian": "б",
+        "latin": "b",
+        "pronunciation": "[b], [bʲ]"
+      }
+    },
+    {
+      "Id": "33df06e2-0118-4467-8f09-b92cf44ede96",
+      "FieldsContents": {
+        "big_russian": "В",
+        "small_russian": "в",
+        "latin": "v",
+        "pronunciation": "[v], [vʲ]"
+      }
+    },
+    {
+      "Id": "99dc7229-1741-4dd8-9091-7b46ee628589",
+      "FieldsContents": {
+        "big_russian": "Г",
+        "small_russian": "г",
+        "latin": "g",
+        "pronunciation": "[g], [gʲ]"
+      }
+    },
+    {
+      "Id": "f6b46fe0-f045-4f7b-8ca8-0f3eb58cec8c",
+      "FieldsContents": {
+        "big_russian": "Д",
+        "small_russian": "д",
+        "latin": "d",
+        "pronunciation": "[d̪], [d̪ʲ]"
+      }
+    },
+    {
+      "Id": "3d698122-def2-4369-85d8-51d7384f04d9",
+      "FieldsContents": {
+        "big_russian": "Е",
+        "small_russian": "е",
+        "latin": "je",
+        "pronunciation": "[ʲɛ], [jɛ]"
+      }
+    },
+    {
+      "Id": "2c7bc1fe-d1ba-426a-adfb-e7b5e1e238e8",
+      "FieldsContents": {
+        "big_russian": "Ё",
+        "small_russian": "ё",
+        "latin": "jo",
+        "pronunciation": "[ʲɵ̞]"
+      }
+    },
+    {
+      "Id": "9161650b-0f26-40e1-824b-60d9a7143647",
+      "FieldsContents": {
+        "big_russian": "Ж",
+        "small_russian": "ж",
+        "latin": "zj",
+        "pronunciation": "[ʐ]"
+      }
+    },
+    {
+      "Id": "94e8024d-6685-42b0-ab82-f37ada302faf",
+      "FieldsContents": {
+        "big_russian": "З",
+        "small_russian": "з",
+        "latin": "z",
+        "pronunciation": "[z̪], [z̪ʲ]"
+      }
+    },
+    {
+      "Id": "8d16c21a-7323-4104-9881-56da94224174",
+      "FieldsContents": {
+        "big_russian": "И",
+        "small_russian": "и",
+        "latin": "i",
+        "pronunciation": "[ɪ]"
+      }
+    },
+    {
+      "Id": "9c4d3e7e-713a-431c-9888-381b3ff27794",
+      "FieldsContents": {
+        "big_russian": "Й",
+        "small_russian": "й",
+        "latin": "j",
+        "pronunciation": "[j]"
+      }
+    },
+    {
+      "Id": "9c59b2ee-0296-4659-b76c-664e7cb486ab",
+      "FieldsContents": {
+        "big_russian": "К",
+        "small_russian": "к",
+        "latin": "k",
+        "pronunciation": "[k], [kʲ]"
+      }
+    },
+    {
+      "Id": "127f02eb-c080-4c55-9efb-f2350bd39129",
+      "FieldsContents": {
+        "big_russian": "Л",
+        "small_russian": "л",
+        "latin": "l",
+        "pronunciation": "[ɫ̪], [ɫ̪ʲ]"
+      }
+    },
+    {
+      "Id": "c2d4c469-86a7-4cff-9ade-666e88fad397",
+      "FieldsContents": {
+        "big_russian": "М",
+        "small_russian": "м",
+        "latin": "m",
+        "pronunciation": "[m], [mʲ]"
+      }
+    },
+    {
+      "Id": "e635f7e6-9594-449e-8abb-08ecc7c07e6d",
+      "FieldsContents": {
+        "big_russian": "Н",
+        "small_russian": "н",
+        "latin": "n",
+        "pronunciation": "[n̪], [n̪ʲ]"
+      }
+    },
+    {
+      "Id": "695029b5-674b-441a-bc11-5de97e80c6b2",
+      "FieldsContents": {
+        "big_russian": "О",
+        "small_russian": "о",
+        "latin": "o",
+        "pronunciation": "[o̞]"
+      }
+    },
+    {
+      "Id": "4149799e-483a-4a60-8494-ef30ea692e85",
+      "FieldsContents": {
+        "big_russian": "П",
+        "small_russian": "п",
+        "latin": "p",
+        "pronunciation": "[p], [pʲ]"
+      }
+    },
+    {
+      "Id": "ea31e311-fae8-4b6e-a9aa-c8949642726f",
+      "FieldsContents": {
+        "big_russian": "Р",
+        "small_russian": "р",
+        "latin": "r",
+        "pronunciation": "[r], [rʲ]"
+      }
+    },
+    {
+      "Id": "b122c272-dc9a-45ff-8a81-295f1f527ea3",
+      "FieldsContents": {
+        "big_russian": "С",
+        "small_russian": "с",
+        "latin": "sj",
+        "pronunciation": "[s̪], [s̪ʲ]"
+      }
+    },
+    {
+      "Id": "dc486689-ed58-487c-874d-80ceeb3379bc",
+      "FieldsContents": {
+        "big_russian": "Т",
+        "small_russian": "т",
+        "latin": "t",
+        "pronunciation": "[t̪], [t̪ʲ]"
+      }
+    },
+    {
+      "Id": "61e36029-128d-4215-bff8-99841a2a5029",
+      "FieldsContents": {
+        "big_russian": "У",
+        "small_russian": "у",
+        "latin": "u",
+        "pronunciation": "[u]"
+      }
+    },
+    {
+      "Id": "1c6ebdb7-d1fc-4ecc-b1b8-46edcb0550fc",
+      "FieldsContents": {
+        "big_russian": "Ф",
+        "small_russian": "ф",
+        "latin": "f",
+        "pronunciation": "[f]"
+      }
+    },
+    {
+      "Id": "a9dfacb2-e775-4332-baf0-f6d48181515e",
+      "FieldsContents": {
+        "big_russian": "Х",
+        "small_russian": "х",
+        "latin": "ch",
+        "pronunciation": "[x]"
+      }
+    },
+    {
+      "Id": "830869e3-ad58-4097-b3e4-3107222203b1",
+      "FieldsContents": {
+        "big_russian": "Ц",
+        "small_russian": "ц",
+        "latin": "ts",
+        "pronunciation": "[ʦ], [ʦʲ]"
+      }
+    },
+    {
+      "Id": "81dcf5d7-e96b-4445-8045-44c4a2e648c2",
+      "FieldsContents": {
+        "big_russian": "Ч",
+        "small_russian": "ч",
+        "latin": "tj",
+        "pronunciation": "[ʨ]"
+      }
+    },
+    {
+      "Id": "e91702fa-9fd5-4051-af1d-887adfbc70fc",
+      "FieldsContents": {
+        "big_russian": "Ш",
+        "small_russian": "ш",
+        "latin": "sj",
+        "pronunciation": "[ʂ]"
+      }
+    },
+    {
+      "Id": "206c61ef-5413-4035-b14e-0944dadbbe86",
+      "FieldsContents": {
+        "big_russian": "Щ",
+        "small_russian": "щ",
+        "latin": "sjtj",
+        "pronunciation": "[ɕː]"
+      }
+    },
+    {
+      "Id": "96babb6b-8286-40df-b2f1-f15b302f8b16",
+      "FieldsContents": {
+        "big_russian": "Ъ",
+        "small_russian": "ъ",
+        "latin": "",
+        "pronunciation": "[]"
+      }
+    },
+    {
+      "Id": "ed9589ad-bb8f-4cb0-941e-41cee232891e",
+      "FieldsContents": {
+        "big_russian": "Ы",
+        "small_russian": "ы",
+        "latin": "y",
+        "pronunciation": "[ɨ]"
+      }
+    },
+    {
+      "Id": "a54c261f-96d0-4b6e-bc28-7e4626ceb6ce",
+      "FieldsContents": {
+        "big_russian": "Ь",
+        "small_russian": "ь",
+        "latin": "'",
+        "pronunciation": "[ʲ]"
+      }
+    },
+    {
+      "Id": "950dc493-7711-4c70-bbc9-6aa628054f66",
+      "FieldsContents": {
+        "big_russian": "Э",
+        "small_russian": "э",
+        "latin": "e",
+        "pronunciation": "[ɛ]"
+      }
+    },
+    {
+      "Id": "35481963-dcb9-4b7e-9f22-2ef3b91e1058",
+      "FieldsContents": {
+        "big_russian": "Ю",
+        "small_russian": "ю",
+        "latin": "ju",
+        "pronunciation": "[ʲu], [ju]"
+      }
+    },
+    {
+      "Id": "16012009-44b3-4723-9e82-354c31f55a1c",
+      "FieldsContents": {
+        "big_russian": "Я",
+        "small_russian": "я",
+        "latin": "ja",
+        "pronunciation": "[ʲɐ], [jɐ]"
+      }
+    }
+  ],
+  "CardTypes": [
+    {
+      "Id": "1adca18a-5580-492e-82e9-c8532eaddabd",
+      "Name": "Big Russian to Latin",
+      "QuestionTemplate": "{{big_russian}}",
+      "AnswerTemplate": "{{latin}} ({{pronunciation}})"
+    }
+  ]
+}

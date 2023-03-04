@@ -18,6 +18,27 @@ namespace MemBoot.DataAccess.Sqlite
             connection?.Execute(SqlStatements.CreateAllTables);
         }
 
+        public IEnumerable<Deck> GetDecks()
+        {
+            var output = new HashSet<Deck>();
+
+            using var connection = new SQLiteConnection(connectionString);
+            if (connection != null)
+            {
+                const string sql = "SELECT id FROM decks;";
+                var ids = connection.Query<Guid>(sql);
+                foreach (var id in ids)
+                {
+                    if (GetDeckFromId(id) is Deck deck)
+                    {
+                        output.Add(deck);
+                    }
+                }
+            }
+
+            return output;
+        }
+
         public bool AddDeck(Deck deck)
         {
             var output = true;
@@ -89,6 +110,95 @@ namespace MemBoot.DataAccess.Sqlite
                     }
 
                     transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+
+            return output;
+        }
+
+        private bool DeckIsStored(Guid deckId)
+        {
+            var output = false;
+
+            using var connection = new SQLiteConnection(connectionString);
+            if (connection != null)
+            {
+                var sql = "SELECT 1 FROM decks WHERE id = @deckId;";
+                var affectedRows = connection.Query<int>(sql, new { deckId });
+                output = affectedRows.Any();
+            }
+
+            return output;
+        }
+
+        public bool AddOrReplaceDeck(Deck deck)
+        {
+            var output = false;
+
+            if (DeckIsStored(deck.Id))
+            {
+                output = RemoveDeck(deck);
+                if (output)
+                {
+                    output = AddDeck(deck);
+                }
+            }
+            else
+            {
+                output = AddDeck(deck);
+            }
+
+            return output;
+        }
+
+        public bool RemoveDeck(Deck deck)
+        {
+            var output = false;
+
+            string sql = string.Empty;
+            using var connection = new SQLiteConnection(connectionString);
+            if (connection != null)
+            {
+                connection.Open();
+                using var transaction = connection.BeginTransaction();
+                try
+                {
+                    sql = "DELETE FROM mastery_records WHERE cardtype_id IN (SELECT id FROM cardtypes WHERE deck_id = @deckId);";
+                    connection.Execute(sql, new { deckId = deck.Id });
+
+                    sql = "DELETE FROM decks_to_resources WHERE deck_id = @deckId;";
+                    connection.Execute(sql, new { deckId = deck.Id });
+
+                    // Delete all resources not used in other decks (by checking if the MD5 is still being used).
+                    sql = "DELETE FROM resources WHERE md5 NOT IN (SELECT resource_md5 FROM decks_to_resources LEFT OUTER JOIN resources ON decks_to_resources.resource_md5 = resources.md5 WHERE resources.md5 IS NOT NULL);";
+                    connection.Execute(sql);
+
+                    sql = "DELETE FROM cardtypes WHERE deck_id = @deckId;";
+                    connection.Execute(sql, new { deckId = deck.Id });
+
+                    sql = "DELETE FROM facts_contents WHERE deck_id = @deckId;";
+                    connection.Execute(sql, new { deckId = deck.Id });
+
+                    sql = "DELETE FROM facts WHERE deck_id = @deckId;";
+                    connection.Execute(sql, new { deckId = deck.Id });
+
+                    sql = "DELETE FROM fields WHERE deck_id = @deckId;";
+                    connection.Execute(sql, new { deckId = deck.Id });
+
+                    sql = "DELETE FROM decks WHERE id = @deckId;";
+                    connection.Execute(sql, new { deckId = deck.Id });
+
+                    transaction.Commit();
+                    output = true;
                 }
                 catch (Exception)
                 {

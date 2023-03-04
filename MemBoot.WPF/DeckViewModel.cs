@@ -2,13 +2,23 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace MemBoot.WPF
 {
-    public class DeckViewModel
+    public class DeckViewModel : INotifyPropertyChanged
     {
-        private readonly Deck deck;
+        private Deck deck;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        internal Deck CurrentDeck { get => deck; }
 
         public DeckViewModel(Deck deck)
         {
@@ -16,6 +26,28 @@ namespace MemBoot.WPF
             Fields = new(deck.Fields);
             CardTypes = new(deck.CardTypes);
             Facts = new(deck.Facts);
+        }
+
+        public void ChangeDeck(Deck deck)
+        {
+            Fields.Clear();
+            CardTypes.Clear();
+            Facts.Clear();
+            this.deck = deck;
+            foreach (var field in deck.Fields)
+            {
+                Fields.Add(field);
+            }
+            foreach (var cardType in deck.CardTypes)
+            {
+                CardTypes.Add(cardType);
+            }
+            foreach (var fact in deck.Facts)
+            {
+                Facts.Add(fact);
+            }
+            NotifyPropertyChanged(nameof(Name));
+            NotifyPropertyChanged(nameof(Description));
         }
 
         public string Name
