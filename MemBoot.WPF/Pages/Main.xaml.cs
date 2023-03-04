@@ -88,7 +88,7 @@ namespace MemBoot.Pages
                 var deck = deckStorage.GetDeckFromCardTypeId(pick.Item2);
                 if (deck != null)
                 {
-                    var editWindow = new Editor(new(deck));
+                    var editWindow = new Editor(deck, new(deck), deckStorage);
                     editWindow.ShowDialog();
                     RefillStoredCardTypes();
                 }

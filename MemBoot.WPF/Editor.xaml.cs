@@ -1,5 +1,8 @@
 ﻿using MemBoot.Core.Models;
+using MemBoot.DataAccess;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,93 +11,38 @@ namespace MemBoot.WPF
 {
     public partial class Editor : Window
     {
-        private readonly DeckViewModel deckViewModel;
-        public Editor(DeckViewModel deckViewModel)
+        public ObservableCollection<Deck> Decks { get; set; }
+
+        public Editor(Deck deck, DeckViewModel deckViewModel, IDeckStorage deckStorage)
         {
             InitializeComponent();
-            this.deckViewModel = deckViewModel;
-            DataContext = deckViewModel;
-            RemakeColumns();
+
+            DataContext = this;
+            Decks = new ObservableCollection<Deck>(deckStorage.GetDecks());
+            DeckListBox.SelectedIndex = Decks.IndexOf(deck);
+
+            CurrentDeckEditor.DataContext = deckViewModel;
+            CurrentFieldEditor.DataContext = deckViewModel;
+            CurrentCardTypeEditor.DataContext = deckViewModel;
+            CurrentFactEditor.DataContext = deckViewModel;
+            CurrentResourceManager.DataContext = deckViewModel;
+
+            CurrentDeckEditor.StoreChanges = () => deckStorage.AddOrReplaceDeck(deckViewModel.CurrentDeck);
+
+            CurrentFieldEditor.OnFieldAdded = () => CurrentFactEditor.RemakeColumns();
+            CurrentFieldEditor.OnFieldRemoved = () => CurrentFactEditor.RemakeColumns();
+            CurrentFieldEditor.OnFieldRenamed = () => CurrentFactEditor.RefreshColumnHeaders();
+
+            CurrentFactEditor.RemakeColumns();
         }
 
-        private void AddFieldButton_Click(object sender, RoutedEventArgs e)
+        private void DeckListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            deckViewModel.CreateNewField();
-            RemakeColumns();
-        }
-
-        private void RemoveFieldButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (FieldsListBox.SelectedItem is Field field)
+            if ((sender as ListBox)?.SelectedItem is Deck newlySelectedDeck && CurrentFactEditor.DataContext is DeckViewModel deckViewModel)
             {
-                var result = MessageBox.Show("This will remove information from any fact currently using this field. Continue?", "Remove Field", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
-                if (result == MessageBoxResult.Yes)
-                {
-                    deckViewModel.RemoveField(field);
-                    RemakeColumns();
-                }
+                deckViewModel.ChangeDeck(newlySelectedDeck);
+                CurrentFactEditor.RemakeColumns();
             }
-        }
-
-        private void AddCardTypeButton_Click(object sender, RoutedEventArgs e)
-        {
-            deckViewModel.CreateCardType();
-        }
-
-        private void RemoveCardTypeButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (CardTypesListBox.SelectedItem is CardType cardType)
-            {
-                deckViewModel.RemoveCardType(cardType);
-            }
-        }
-
-        private void RefreshColumnHeaders()
-        {
-            foreach (var column in FactsDataGrid.Columns.Cast<FieldColumn>().ToList())
-            {
-                column.RefreshHeader();
-            }
-        }
-
-        private void RemakeColumns()
-        {
-            var availableFields = new HashSet<Field>(deckViewModel.Fields);
-            var existingColumns = FactsDataGrid.Columns.Cast<DataGridColumn>().ToList();
-            foreach (var existingColumn in existingColumns)
-            {
-                if (existingColumn is FieldColumn fieldColumn)
-                {
-                    if (availableFields.Contains(fieldColumn.OriginalField))
-                    {
-                        fieldColumn.RefreshHeader();
-                        availableFields.Remove(fieldColumn.OriginalField);
-                    }
-                    else
-                    {
-                        FactsDataGrid.Columns.Remove(existingColumn);
-                    }
-                }
-            }
-            foreach (var unusedField in availableFields)
-            {
-                FactsDataGrid.Columns.Add(new FieldColumn(unusedField));
-            }
-        }
-
-        private void FieldNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            RefreshColumnHeaders();
-        }
-
-        private void AddFactButton_Click(object sender, RoutedEventArgs e)
-        {
-            deckViewModel.CreateNewFact();
-        }
-
-        private void RemoveFactButton_Click(object sender, RoutedEventArgs e)
-        {
-            deckViewModel.RemoveFacts(FactsDataGrid.SelectedItems.Cast<Fact>().ToList());
         }
     }
 }
