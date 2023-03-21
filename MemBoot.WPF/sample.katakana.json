@@ -1,0 +1,361 @@
+{
+  "Id": "a9e72bf9-7377-4066-af6b-6104c883b992",
+  "Name": "Japanese Katakana",
+  "Description": "Katakana",
+  "Fields": [
+    { "Name": "katakana" },
+    { "Name": "latin" }
+  ],
+  "Facts": [
+    {
+      "Id": "dbf69c6b-77cf-41d6-9818-23615a38932c",
+      "FieldsContents": {
+        "katakana": "ノ",
+        "latin": "no"
+      }
+    },
+    {
+      "Id": "9ff40e2a-2d09-413a-8817-1f820472bebc",
+      "FieldsContents": {
+        "katakana": "メ",
+        "latin": "me"
+      }
+    },
+    {
+      "Id": "fbd30618-20aa-4705-a93f-9177930b8535",
+      "FieldsContents": {
+        "katakana": "フ",
+        "latin": "fu"
+      }
+    },
+    {
+      "Id": "f30b8dc7-e018-4249-b81a-987865e9c1b0",
+      "FieldsContents": {
+        "katakana": "ヲ",
+        "latin": "wo"
+      }
+    },
+    {
+      "Id": "e734e133-1f7a-4093-b99f-8c00de138ae3",
+      "FieldsContents": {
+        "katakana": "ラ",
+        "latin": "ra"
+      }
+    },
+    {
+      "Id": "6e8884d2-9d67-436f-9e38-6c92c1deb176",
+      "FieldsContents": {
+        "katakana": "ワ",
+        "latin": "wa"
+      }
+    },
+    {
+      "Id": "f28f902b-2298-4ffa-a132-c3d8aa2836fd",
+      "FieldsContents": {
+        "katakana": "ウ",
+        "latin": "u"
+      }
+    },
+    {
+      "Id": "b54eb68e-ab80-4936-8f12-1fbf8dd7600f",
+      "FieldsContents": {
+        "katakana": "ス",
+        "latin": "su"
+      }
+    },
+    {
+      "Id": "a5ce425e-e329-48b2-85b2-47744f0eac9e",
+      "FieldsContents": {
+        "katakana": "ヌ",
+        "latin": "nu"
+      }
+    },
+    {
+      "Id": "a2ccefea-4293-4165-bed3-2ae190b0009b",
+      "FieldsContents": {
+        "katakana": "ク",
+        "latin": "ku"
+      }
+    },
+    {
+      "Id": "4f906c2d-4c66-439e-8afc-eff30f571a9c",
+      "FieldsContents": {
+        "katakana": "タ",
+        "latin": "ta"
+      }
+    },
+    {
+      "Id": "f61666c5-e484-437d-bbcc-e001f09a57a7",
+      "FieldsContents": {
+        "katakana": "ケ",
+        "latin": "ke"
+      }
+    },
+    {
+      "Id": "caaa8c0f-8d05-4bc1-8622-8546d5648da9",
+      "FieldsContents": {
+        "katakana": "ネ",
+        "latin": "ne"
+      }
+    },
+    {
+      "Id": "77673765-8158-48bb-bab3-3090aebd5024",
+      "FieldsContents": {
+        "katakana": "ン",
+        "latin": "n"
+      }
+    },
+    {
+      "Id": "3fa8232d-8ad7-4519-9c6f-6d354648fd79",
+      "FieldsContents": {
+        "katakana": "ソ",
+        "latin": "so"
+      }
+    },
+    {
+      "Id": "a0f4eb2f-616b-4c8a-bb6e-3b2159bb9c6c",
+      "FieldsContents": {
+        "katakana": "ツ",
+        "latin": "tsu"
+      }
+    },
+    {
+      "Id": "7e874c56-bec3-47f5-8640-88a12fc198a3",
+      "FieldsContents": {
+        "katakana": "シ",
+        "latin": "shi"
+      }
+    },
+    {
+      "Id": "0c8c17bd-9f83-4664-8a75-a86ba85d3457",
+      "FieldsContents": {
+        "katakana": "ヒ",
+        "latin": "hi"
+      }
+    },
+    {
+      "Id": "67212db0-d1c2-4f35-9977-03100e0f1c5d",
+      "FieldsContents": {
+        "katakana": "セ",
+        "latin": "se"
+      }
+    },
+    {
+      "Id": "e422ff3a-378a-4ce0-b270-c42a1869b587",
+      "FieldsContents": {
+        "katakana": "モ",
+        "latin": "mo"
+      }
+    },
+    {
+      "Id": "cba66c4b-14e6-48d2-8809-0e7211d1a7da",
+      "FieldsContents": {
+        "katakana": "キ",
+        "latin": "ki"
+      }
+    },
+    {
+      "Id": "a2e9e02d-4d31-455a-b8e2-c514189034ee",
+      "FieldsContents": {
+        "katakana": "ヘ",
+        "latin": "he"
+      }
+    },
+    {
+      "Id": "a274033a-ae70-4f71-9077-0211b23f6571",
+      "FieldsContents": {
+        "katakana": "ト",
+        "latin": "to"
+      }
+    },
+    {
+      "Id": "0ef719e7-dce7-4158-8349-531033a04a0b",
+      "FieldsContents": {
+        "katakana": "イ",
+        "latin": "i"
+      }
+    },
+    {
+      "Id": "a22dfe49-a31a-4702-b7f5-0548f724f2cb",
+      "FieldsContents": {
+        "katakana": "ナ",
+        "latin": "na"
+      }
+    },
+    {
+      "Id": "09546cea-6539-40ff-8150-145a8fedff6f",
+      "FieldsContents": {
+        "katakana": "テ",
+        "latin": "te"
+      }
+    },
+    {
+      "Id": "0bc4ea27-c498-4247-90bd-0ab91a3a3c73",
+      "FieldsContents": {
+        "katakana": "チ",
+        "latin": "chi"
+      }
+    },
+    {
+      "Id": "4582c04f-8c27-472e-9b23-25ed7dde0846",
+      "FieldsContents": {
+        "katakana": "カ",
+        "latin": "ka"
+      }
+    },
+    {
+      "Id": "834c1760-a0df-4670-819a-b6d56621e64f",
+      "FieldsContents": {
+        "katakana": "ハ",
+        "latin": "ha"
+      }
+    },
+    {
+      "Id": "f6089837-05e3-4a2e-9f3a-42ed91f99d06",
+      "FieldsContents": {
+        "katakana": "ホ",
+        "latin": "ho"
+      }
+    },
+    {
+      "Id": "e7444cd1-d538-4347-b0be-4ad1ee877cab",
+      "FieldsContents": {
+        "katakana": "オ",
+        "latin": "o"
+      }
+    },
+    {
+      "Id": "af37ed4e-5f0a-49fa-bb06-3e41699053a7",
+      "FieldsContents": {
+        "katakana": "ニ",
+        "latin": "ni"
+      }
+    },
+    {
+      "Id": "be41c59c-de2e-4f02-a3f2-b6ce189130e8",
+      "FieldsContents": {
+        "katakana": "エ",
+        "latin": "e"
+      }
+    },
+    {
+      "Id": "828b7879-953a-4ae8-88fa-a12d0fc56ee5",
+      "FieldsContents": {
+        "katakana": "コ",
+        "latin": "ko"
+      }
+    },
+    {
+      "Id": "5e9f8fec-8290-4fb0-b480-4b9f36ccbd42",
+      "FieldsContents": {
+        "katakana": "ユ",
+        "latin": "yu"
+      }
+    },
+    {
+      "Id": "ba6ede30-e870-4e25-bdcd-4e92ef7b5563",
+      "FieldsContents": {
+        "katakana": "ミ",
+        "latin": "mi"
+      }
+    },
+    {
+      "Id": "1e64095b-e346-470c-bae3-731e92a60b4c",
+      "FieldsContents": {
+        "katakana": "ヨ",
+        "latin": "yo"
+      }
+    },
+    {
+      "Id": "b2582ffa-ebb1-4161-ab9b-3f0a73f92c8e",
+      "FieldsContents": {
+        "katakana": "ロ",
+        "latin": "ro"
+      }
+    },
+    {
+      "Id": "62abdb04-d4d0-4be2-ad0a-5c5a90e72f16",
+      "FieldsContents": {
+        "katakana": "ヤ",
+        "latin": "ya"
+      }
+    },
+    {
+      "Id": "c7c3d5c1-e955-4680-9a8a-0da4a44a8c40",
+      "FieldsContents": {
+        "katakana": "マ",
+        "latin": "ma"
+      }
+    },
+    {
+      "Id": "8f0b3e24-cc00-4910-ac6a-e9eaf4e297c4",
+      "FieldsContents": {
+        "katakana": "ア",
+        "latin": "a"
+      }
+    },
+    {
+      "Id": "9fb56a45-69e8-4ef9-bfb8-70dc3bfd9c24",
+      "FieldsContents": {
+        "katakana": "ヱ",
+        "latin": "(w)e"
+      }
+    },
+    {
+      "Id": "bac19fac-4570-4122-950e-29840458ff3c",
+      "FieldsContents": {
+        "katakana": "ム",
+        "latin": "mu"
+      }
+    },
+    {
+      "Id": "0c66f0db-d7ef-4ea7-ba64-779ad3cde898",
+      "FieldsContents": {
+        "katakana": "レ",
+        "latin": "re"
+      }
+    },
+    {
+      "Id": "0084b721-2037-4a73-851d-534bc26fecbc",
+      "FieldsContents": {
+        "katakana": "ル",
+        "latin": "ru"
+      }
+    },
+    {
+      "Id": "7f623fd9-0d25-47a7-960b-8331a5e336ff",
+      "FieldsContents": {
+        "katakana": "リ",
+        "latin": "ri"
+      }
+    },
+    {
+      "Id": "0491e1eb-9c17-47ef-afc1-c4720e023ef2",
+      "FieldsContents": {
+        "katakana": "サ",
+        "latin": "sa"
+      }
+    },
+    {
+      "Id": "4a52c6e4-abad-40ff-859b-516459f9fd78",
+      "FieldsContents": {
+        "katakana": "ヰ",
+        "latin": "(w)i"
+      }
+    }
+  ],
+  "CardTypes": [
+    {
+      "Id": "d087e3de-110d-4d5b-9290-438e37cd89dd",
+      "Name": "Katakana to Latin",
+      "QuestionTemplate": "{{katakana}}",
+      "AnswerTemplate": "{{latin}}"
+    },
+    {
+      "Id": "7334fd41-5321-44cf-8051-e5f606c4891e",
+      "Name": "Latin to Katakana",
+      "QuestionTemplate": "{{latin}}",
+      "AnswerTemplate": "{{katakana}}"
+    }
+  ]
+}

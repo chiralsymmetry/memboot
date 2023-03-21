@@ -17,6 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="sample.katakana.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="sample.hiragana.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="sample.cyrillic.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

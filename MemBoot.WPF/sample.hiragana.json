@@ -1,0 +1,361 @@
+{
+  "Id": "da9a2509-c120-493b-879e-0de730e4baa0",
+  "Name": "Japanese Hiragana",
+  "Description": "Hiragana",
+  "Fields": [
+    { "Name": "hiragana" },
+    { "Name": "latin" }
+  ],
+  "Facts": [
+    {
+      "Id": "3e3d7e36-7d51-4b1b-a5cd-3b19c946e909",
+      "FieldsContents": {
+        "hiragana": "く",
+        "latin": "ku"
+      }
+    },
+    {
+      "Id": "e5b0c9c9-ab5d-42bc-8a12-06dbeb6858d1",
+      "FieldsContents": {
+        "hiragana": "へ",
+        "latin": "he"
+      }
+    },
+    {
+      "Id": "3c6e8cc6-f014-40ac-846a-7812a758407c",
+      "FieldsContents": {
+        "hiragana": "し",
+        "latin": "shi"
+      }
+    },
+    {
+      "Id": "cd8b9cdd-48d2-43d4-8d36-a9214b113ae3",
+      "FieldsContents": {
+        "hiragana": "も",
+        "latin": "mo"
+      }
+    },
+    {
+      "Id": "ab8f73a5-0e95-4150-b921-96e9f5398dbe",
+      "FieldsContents": {
+        "hiragana": "ひ",
+        "latin": "hi"
+      }
+    },
+    {
+      "Id": "ad81aba0-ec74-4c62-a6ee-272f3af714d1",
+      "FieldsContents": {
+        "hiragana": "こ",
+        "latin": "ko"
+      }
+    },
+    {
+      "Id": "6ac6e9e1-c97e-4e7f-9086-4d04cee24b53",
+      "FieldsContents": {
+        "hiragana": "に",
+        "latin": "ni"
+      }
+    },
+    {
+      "Id": "cfdb012d-c9be-4e34-99d6-74dfc9f38e4f",
+      "FieldsContents": {
+        "hiragana": "た",
+        "latin": "ta"
+      }
+    },
+    {
+      "Id": "56628b29-93d5-4323-930b-5468daeaa627",
+      "FieldsContents": {
+        "hiragana": "い",
+        "latin": "i"
+      }
+    },
+    {
+      "Id": "3d627a7b-274f-4ebf-882a-c4693e501f2c",
+      "FieldsContents": {
+        "hiragana": "り",
+        "latin": "ri"
+      }
+    },
+    {
+      "Id": "e11c0fce-1c93-44a4-8450-96b8272f1629",
+      "FieldsContents": {
+        "hiragana": "け",
+        "latin": "ke"
+      }
+    },
+    {
+      "Id": "c756c10b-125f-4324-811c-8f59916069b6",
+      "FieldsContents": {
+        "hiragana": "せ",
+        "latin": "se"
+      }
+    },
+    {
+      "Id": "a105bda4-c3b0-469a-9059-e15de8b8ff67",
+      "FieldsContents": {
+        "hiragana": "の",
+        "latin": "no"
+      }
+    },
+    {
+      "Id": "cf81e0f8-bd7b-4cb2-8a7b-5da2c6bcccbf",
+      "FieldsContents": {
+        "hiragana": "め",
+        "latin": "me"
+      }
+    },
+    {
+      "Id": "1bc6dc50-326e-4a0e-99df-287b8577d01d",
+      "FieldsContents": {
+        "hiragana": "ぬ",
+        "latin": "nu"
+      }
+    },
+    {
+      "Id": "47dc6d3d-4a6c-4bfe-93f3-4274ee53f962",
+      "FieldsContents": {
+        "hiragana": "あ",
+        "latin": "a"
+      }
+    },
+    {
+      "Id": "51f7e86d-c252-4e64-a778-7f362ce3c712",
+      "FieldsContents": {
+        "hiragana": "お",
+        "latin": "o"
+      }
+    },
+    {
+      "Id": "861fadc9-473d-4b19-9f93-c8e9e4c8bd95",
+      "FieldsContents": {
+        "hiragana": "は",
+        "latin": "ha"
+      }
+    },
+    {
+      "Id": "239778c4-746c-42ad-b2a8-77631e88ac83",
+      "FieldsContents": {
+        "hiragana": "ほ",
+        "latin": "ho"
+      }
+    },
+    {
+      "Id": "b39cdfd8-1ec4-4e7c-a1d5-6ad00f02cc9e",
+      "FieldsContents": {
+        "hiragana": "ま",
+        "latin": "ma"
+      }
+    },
+    {
+      "Id": "2c27538e-6241-403a-95a5-7516e4805779",
+      "FieldsContents": {
+        "hiragana": "よ",
+        "latin": "yo"
+      }
+    },
+    {
+      "Id": "8b33380a-7372-4156-8757-a3589a05e4d0",
+      "FieldsContents": {
+        "hiragana": "な",
+        "latin": "na"
+      }
+    },
+    {
+      "Id": "ec7b269c-1d4a-4e59-ad82-ce5eb1ce6e4b",
+      "FieldsContents": {
+        "hiragana": "す",
+        "latin": "su"
+      }
+    },
+    {
+      "Id": "bf56986b-b446-48b9-b79d-48423124bc4a",
+      "FieldsContents": {
+        "hiragana": "む",
+        "latin": "mu"
+      }
+    },
+    {
+      "Id": "38b8e899-747a-467a-a2c3-76905b5f2b8d",
+      "FieldsContents": {
+        "hiragana": "ふ",
+        "latin": "fu"
+      }
+    },
+    {
+      "Id": "495cfc97-38b7-4eab-b471-f60a1b599990",
+      "FieldsContents": {
+        "hiragana": "か",
+        "latin": "ka"
+      }
+    },
+    {
+      "Id": "5a52daaf-07b4-4e96-bbb2-1b0a46e8d10b",
+      "FieldsContents": {
+        "hiragana": "つ",
+        "latin": "tsu"
+      }
+    },
+    {
+      "Id": "6725bc39-b611-4005-a8d1-70978d3cc633",
+      "FieldsContents": {
+        "hiragana": "う",
+        "latin": "u"
+      }
+    },
+    {
+      "Id": "e58eaa60-ab67-4500-9841-288c5db32597",
+      "FieldsContents": {
+        "hiragana": "ち",
+        "latin": "chi"
+      }
+    },
+    {
+      "Id": "15255f26-e7a7-42ba-ad84-4398b11e7f9b",
+      "FieldsContents": {
+        "hiragana": "ら",
+        "latin": "ra"
+      }
+    },
+    {
+      "Id": "8b134e87-c4a9-4248-9872-c426c98dd449",
+      "FieldsContents": {
+        "hiragana": "や",
+        "latin": "ya"
+      }
+    },
+    {
+      "Id": "b6aa7d83-f24f-4d62-8e38-e40837e52ccc",
+      "FieldsContents": {
+        "hiragana": "ゆ",
+        "latin": "yu"
+      }
+    },
+    {
+      "Id": "e2b85979-9581-4fdc-87b5-e3e427cde19c",
+      "FieldsContents": {
+        "hiragana": "ろ",
+        "latin": "ro"
+      }
+    },
+    {
+      "Id": "345d9aa0-b0d3-4b53-9168-ae1be79fe5e4",
+      "FieldsContents": {
+        "hiragana": "る",
+        "latin": "ru"
+      }
+    },
+    {
+      "Id": "ebd2b4ac-3f3f-4a0c-a596-c474f41f0054",
+      "FieldsContents": {
+        "hiragana": "ゑ",
+        "latin": "(w)e"
+      }
+    },
+    {
+      "Id": "1140f512-fb19-41a2-af52-3ce278b96567",
+      "FieldsContents": {
+        "hiragana": "ん",
+        "latin": "n"
+      }
+    },
+    {
+      "Id": "36276ed1-0191-46f9-ae4e-8d450d027f73",
+      "FieldsContents": {
+        "hiragana": "え",
+        "latin": "e"
+      }
+    },
+    {
+      "Id": "ad3b901a-d2e5-453b-a51f-714e326cbefb",
+      "FieldsContents": {
+        "hiragana": "わ",
+        "latin": "wa"
+      }
+    },
+    {
+      "Id": "aab03f20-a7ac-44b7-8078-ebd5830db095",
+      "FieldsContents": {
+        "hiragana": "れ",
+        "latin": "re"
+      }
+    },
+    {
+      "Id": "d05db950-c8fe-4c45-b481-7f49701cb144",
+      "FieldsContents": {
+        "hiragana": "ね",
+        "latin": "ne"
+      }
+    },
+    {
+      "Id": "8071ebdc-27d4-4b84-a93e-b45914a3a10d",
+      "FieldsContents": {
+        "hiragana": "さ",
+        "latin": "sa"
+      }
+    },
+    {
+      "Id": "1834ee3d-2756-4bee-a807-bd5b6235d2a4",
+      "FieldsContents": {
+        "hiragana": "き",
+        "latin": "ki"
+      }
+    },
+    {
+      "Id": "e9c3739b-7be8-4ef6-b868-fe8dcab6b079",
+      "FieldsContents": {
+        "hiragana": "と",
+        "latin": "to"
+      }
+    },
+    {
+      "Id": "060a50c3-25e0-4138-8f78-c358bc3f2511",
+      "FieldsContents": {
+        "hiragana": "を",
+        "latin": "wo"
+      }
+    },
+    {
+      "Id": "de7eb3b2-86a2-4f4a-8606-2d667acabaa3",
+      "FieldsContents": {
+        "hiragana": "て",
+        "latin": "te"
+      }
+    },
+    {
+      "Id": "df35a944-fe97-4735-9511-62abc60c7bda",
+      "FieldsContents": {
+        "hiragana": "そ",
+        "latin": "so"
+      }
+    },
+    {
+      "Id": "cb704168-1e14-44f0-ba50-44e399eb23c6",
+      "FieldsContents": {
+        "hiragana": "み",
+        "latin": "mi"
+      }
+    },
+    {
+      "Id": "85cb0092-0b59-4e1e-b087-05d427ac2877",
+      "FieldsContents": {
+        "hiragana": "ゐ",
+        "latin": "(w)i"
+      }
+    }
+  ],
+  "CardTypes": [
+    {
+      "Id": "0a7028a9-d6ca-4d68-8e80-9aa19cfd7477",
+      "Name": "Hiragana to Latin",
+      "QuestionTemplate": "{{hiragana}}",
+      "AnswerTemplate": "{{latin}}"
+    },
+    {
+      "Id": "dadf3874-5dc6-4cdb-b862-f70db9f3e916",
+      "Name": "Latin to Hiragana",
+      "QuestionTemplate": "{{latin}}",
+      "AnswerTemplate": "{{hiragana}}"
+    }
+  ]
+}
