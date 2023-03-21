@@ -19,7 +19,7 @@ namespace MemBoot.WPF
 
             DataContext = this;
             Decks = new ObservableCollection<Deck>(deckStorage.GetDecks());
-            DeckListBox.SelectedIndex = Decks.IndexOf(deck);
+            DeckListBox.SelectedItem = deck;
 
             CurrentDeckEditor.DataContext = deckViewModel;
             CurrentFieldEditor.DataContext = deckViewModel;

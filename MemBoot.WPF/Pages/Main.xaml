@@ -17,7 +17,6 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding Item1}"/>
                 <Button Grid.Column="2" Margin="25 0 0 0" Content="Load" Click="CardTypeButton_Click" />
-                <Button Grid.Column="3" Content="Edit" Click="EditButton_Click" />
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -35,6 +34,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <ListBox Grid.Column="1" Grid.Row="1" DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type Page}}}" ItemsSource="{Binding StoredCardTypes}" ItemTemplate="{StaticResource CardTypeTemplate}" />
-        <Button Grid.Column="1" Grid.Row="3" Content="Import..." Click="ImportButton_Click" />
+        <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Vertical">
+            <Button Content="Import..." Click="ImportButton_Click" />
+            <Button Content="Open Editor" Click="EditButton_Click" />
+        </StackPanel>
     </Grid>
 </Page>

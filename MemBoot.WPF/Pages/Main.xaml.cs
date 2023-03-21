@@ -5,15 +5,13 @@ using MemBoot.DataAccess.Sqlite;
 using MemBoot.WPF;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 
 namespace MemBoot.Pages
 {
-    /// <summary>
-    /// Interaction logic for Main.xaml
-    /// </summary>
     public partial class Main : Page
     {
         private readonly IDeckStorage deckStorage;
@@ -83,16 +81,19 @@ namespace MemBoot.Pages
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            if ((sender as Button)?.DataContext is Tuple<string, Guid> pick)
+            Deck deck = new()
             {
-                var deck = deckStorage.GetDeckFromCardTypeId(pick.Item2);
-                if (deck != null)
-                {
-                    var editWindow = new Editor(deck, new(deck), deckStorage);
-                    editWindow.ShowDialog();
-                    RefillStoredCardTypes();
-                }
+                Id = Guid.NewGuid(),
+                Name = "New Deck"
+            };
+            var decks = deckStorage.GetDecks().ToList();
+            if (decks.Any())
+            {
+                deck = decks[0];
             }
+            var editWindow = new Editor(deck, new(deck), deckStorage);
+            editWindow.ShowDialog();
+            RefillStoredCardTypes();
         }
     }
 }
