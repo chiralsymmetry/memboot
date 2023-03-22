@@ -12,6 +12,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -22,5 +24,7 @@
         <Label Grid.Row="1" Grid.Column="0" Content="Description"/>
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
         <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Click="StoreChangesButton_Click">Store Changes</Button>
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Click="CreateDeckButton_Click">Create Deck</Button>
+        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Click="DeleteDeckButton_Click">Delete Deck</Button>
     </Grid>
 </UserControl>

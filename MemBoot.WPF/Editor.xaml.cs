@@ -13,13 +13,20 @@ namespace MemBoot.WPF
     {
         public ObservableCollection<Deck> Decks { get; set; }
 
-        public Editor(Deck deck, DeckViewModel deckViewModel, IDeckStorage deckStorage)
+        public Editor(Deck _, DeckViewModel deckViewModel, IDeckStorage deckStorage)
         {
             InitializeComponent();
 
             DataContext = this;
-            Decks = new ObservableCollection<Deck>(deckStorage.GetDecks());
-            DeckListBox.SelectedItem = deck;
+            {
+                var decks = deckStorage.GetDecks();
+                Decks = new ObservableCollection<Deck>(decks);
+                DeckListBox.SelectedItem = decks.FirstOrDefault(new Deck()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "New Deck"
+                });
+            }
 
             CurrentDeckEditor.DataContext = deckViewModel;
             CurrentFieldEditor.DataContext = deckViewModel;
@@ -27,7 +34,47 @@ namespace MemBoot.WPF
             CurrentFactEditor.DataContext = deckViewModel;
             CurrentResourceManager.DataContext = deckViewModel;
 
-            CurrentDeckEditor.StoreChanges = () => deckStorage.AddOrReplaceDeck(deckViewModel.CurrentDeck);
+            CurrentDeckEditor.StoreChanges = () =>
+            {
+                deckStorage.AddOrReplaceDeck(deckViewModel.CurrentDeck);
+                if (!Decks.Contains(deckViewModel.CurrentDeck))
+                {
+                    Decks.Add(deckViewModel.CurrentDeck);
+                }
+                DeckListBox.Items.Refresh();
+            };
+
+            CurrentDeckEditor.CreateDeck = () =>
+            {
+                Deck newDeck = new Deck()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "New Deck"
+                };
+                deckViewModel.ChangeDeck(newDeck);
+                DeckListBox.SelectedIndex = -1;
+                CurrentFactEditor.RemakeColumns();
+            };
+
+            CurrentDeckEditor.DeleteDeck = () =>
+            {
+                Deck deckToRemove = deckViewModel.CurrentDeck;
+                deckStorage.RemoveDeck(deckToRemove);
+                Decks.Remove(deckToRemove);
+
+                Deck replacementDeck = deckStorage.GetDecks().FirstOrDefault(new Deck()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "New Deck"
+                });
+                if (Decks.Contains(replacementDeck))
+                {
+                    DeckListBox.SelectedItem = replacementDeck;
+                }
+                deckViewModel.ChangeDeck(replacementDeck);
+                DeckListBox.Items.Refresh();
+                CurrentFactEditor.RemakeColumns();
+            };
 
             CurrentFieldEditor.OnFieldAdded = () => CurrentFactEditor.RemakeColumns();
             CurrentFieldEditor.OnFieldRemoved = () => CurrentFactEditor.RemakeColumns();
