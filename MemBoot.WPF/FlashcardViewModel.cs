@@ -1,6 +1,8 @@
 ﻿using MemBoot.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace MemBoot
 {
@@ -8,6 +10,10 @@ namespace MemBoot
     {
         private IFlashcard flashcard;
 
+        private readonly Regex ImagePattern = new(@"\[img:(?<filename>(?:\\.|[^\]])*)\]");
+        private const string ImageHtml = "<img src=\"{source}\">";
+
+        // TODO: Customizable CSS.
         private readonly string HTMLTemplatePart1 = @"<!DOCTYPE html>
 	<head>
 		<meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8"">
@@ -41,6 +47,11 @@ namespace MemBoot
 
         private string GetHTMLTemplate(IList<string> columnClasses, IList<string> columnContents)
         {
+            for (int i = 0; i < columnContents.Count; i++)
+            {
+                columnContents[i] = ImgReplacement(columnContents[i]);
+            }
+
             string columns = string.Empty;
             for (int i = 0; i < columnClasses.Count; i++)
             {
@@ -52,6 +63,31 @@ namespace MemBoot
                 columns += column;
             }
             return $"{HTMLTemplatePart1}{Environment.NewLine}{columns}{Environment.NewLine}{HTMLTemplatePart2}";
+        }
+
+        private string ImgReplacement(string fieldContent)
+        {
+            int from = 0;
+            int to = fieldContent.Length;
+            var match = ImagePattern.Match(fieldContent[from..to]);
+            while (match.Success)
+            {
+                var oldString = match.Groups[0].Value;
+                string filename = match.Groups["filename"].Value.Replace("\\]", "]");
+                var path = flashcard.GetRealResourcePath(filename);
+                if (path != null && File.Exists(path))
+                {
+                    // TODO: Cache.
+                    byte[] imageBytes = File.ReadAllBytes(path);
+                    string base64String = Convert.ToBase64String(imageBytes);
+                    string imageSource = $"data:image/png;base64,{base64String}";
+                    var replacement = ImageHtml.Replace("{source}", imageSource);
+                    fieldContent = fieldContent.Replace(oldString, replacement);
+                }
+                from += match.Index + match.Length;
+                match = ImagePattern.Match(fieldContent[from..to]);
+            }
+            return fieldContent;
         }
 
         public string HTMLQuestion
