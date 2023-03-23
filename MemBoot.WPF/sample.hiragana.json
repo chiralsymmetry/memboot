@@ -4,35 +4,40 @@
   "Description": "Hiragana",
   "Fields": [
     { "Name": "hiragana" },
-    { "Name": "latin" }
+    { "Name": "latin" },
+    { "Name": "stroke_order" }
   ],
   "Facts": [
     {
       "Id": "3e3d7e36-7d51-4b1b-a5cd-3b19c946e909",
       "FieldsContents": {
         "hiragana": "く",
-        "latin": "ku"
+        "latin": "ku",
+        "stroke_order": "[img:hiragana_ku.gif]"
       }
     },
     {
       "Id": "e5b0c9c9-ab5d-42bc-8a12-06dbeb6858d1",
       "FieldsContents": {
         "hiragana": "へ",
-        "latin": "he"
+        "latin": "he",
+        "stroke_order": "[img:hiragana_he.gif]"
       }
     },
     {
       "Id": "3c6e8cc6-f014-40ac-846a-7812a758407c",
       "FieldsContents": {
         "hiragana": "し",
-        "latin": "shi"
+        "latin": "shi",
+        "stroke_order": "[img:hiragana_shi.gif]"
       }
     },
     {
       "Id": "cd8b9cdd-48d2-43d4-8d36-a9214b113ae3",
       "FieldsContents": {
         "hiragana": "も",
-        "latin": "mo"
+        "latin": "mo",
+        "stroke_order": "[img:hiragana_mo.gif]"
       }
     },
     {
@@ -356,6 +361,18 @@
       "Name": "Latin to Hiragana",
       "QuestionTemplate": "{{latin}}",
       "AnswerTemplate": "{{hiragana}}"
+    },
+    {
+      "Id": "399a71e4-c1a0-4070-80ae-c0cf7f05d9d7",
+      "Name": "Latin to Stroke Order",
+      "QuestionTemplate": "{{latin}}",
+      "AnswerTemplate": "{{stroke_order}}"
     }
+  ],
+  "Resources": [
+    "hiragana_ku.gif",
+    "hiragana_he.gif",
+    "hiragana_shi.gif",
+    "hiragana_mo.gif"
   ]
 }
