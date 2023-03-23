@@ -1,8 +1,10 @@
-﻿using MemBoot.Core.Models;
+﻿using MemBoot.Core;
+using MemBoot.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -26,6 +28,7 @@ namespace MemBoot.WPF
             Fields = new(deck.Fields);
             CardTypes = new(deck.CardTypes);
             Facts = new(deck.Facts);
+            Resources = new(deck.Resources.Values);
         }
 
         public void ChangeDeck(Deck deck)
@@ -33,6 +36,7 @@ namespace MemBoot.WPF
             Fields.Clear();
             CardTypes.Clear();
             Facts.Clear();
+            Resources.Clear();
             this.deck = deck;
             foreach (var field in deck.Fields)
             {
@@ -45,6 +49,10 @@ namespace MemBoot.WPF
             foreach (var fact in deck.Facts)
             {
                 Facts.Add(fact);
+            }
+            foreach (var resource in deck.Resources.Values)
+            {
+                Resources.Add(resource);
             }
             NotifyPropertyChanged(nameof(Name));
             NotifyPropertyChanged(nameof(Description));
@@ -149,6 +157,24 @@ namespace MemBoot.WPF
                 deck.Facts.Remove(fact);
                 Facts.Remove(fact);
             }
+        }
+
+        public ObservableCollection<Resource> Resources { get; }
+
+        internal void ImportNewResource()
+        {
+            var result = ImportExportHelpers.ImportResource(deck);
+            if (result != null)
+            {
+                Resources.Add(result);
+            }
+        }
+
+        internal void RemoveResource(Resource resource)
+        {
+            deck.Resources.Remove(resource.Id);
+            Resources.Remove(resource);
+            File.Delete(resource.Path);
         }
     }
 }

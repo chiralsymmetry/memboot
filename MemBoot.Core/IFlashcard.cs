@@ -1,4 +1,6 @@
-﻿namespace MemBoot.Core
+﻿using MemBoot.Core.Models;
+
+namespace MemBoot.Core
 {
     public interface IFlashcard
     {
@@ -7,5 +9,6 @@
         void AnswerCorrectly();
         void AnswerIncorrectly();
         IFlashcard Next();
+        string? GetRealResourcePath(string resourcePath);
     }
 }

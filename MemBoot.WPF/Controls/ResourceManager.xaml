@@ -6,19 +6,29 @@
              xmlns:local="clr-namespace:MemBoot.WPF.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="200">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ResourceListTemplate">
+            <TextBlock Text="{Binding OriginalPath}"/>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ListBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"/>
-        <Button Grid.Row="1" Grid.Column="0">Import</Button>
-        <Button Grid.Row="1" Grid.Column="1">Remove</Button>
-        <Button Grid.Row="1" Grid.Column="2">Export</Button>
+        <ListBox x:Name="ResourcesListBox" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Resources}"  ItemTemplate="{StaticResource ResourceListTemplate}"/>
+        <StackPanel Grid.Row="0" Grid.Column="1" >
+            <Label>Path</Label>
+            <TextBox Text="{Binding SelectedItem.OriginalPath, ElementName=ResourcesListBox, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Click="ImportResourceButton_Click">Import</Button>
+        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Click="RemoveResourceButton_Click">Remove</Button>
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Click="ShowResourceButton_Click">Show File</Button>
     </Grid>
 </UserControl>

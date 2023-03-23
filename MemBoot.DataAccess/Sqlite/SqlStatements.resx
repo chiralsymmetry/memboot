@@ -183,27 +183,15 @@ CREATE TABLE IF NOT EXISTS "cardtypes" (
 	UNIQUE("deck_id","id")
 );
 
--- Any binary resource will be stored only once but may be used by multiple decks.
+-- Resources are universally unique and not shared with other decks.
 
 CREATE TABLE IF NOT EXISTS "resources" (
-	"sort_id" INTEGER PRIMARY KEY AUTOINCREMENT,
-	"md5"	BLOB NOT NULL UNIQUE,
-	"data"	BLOB NOT NULL
-);
-
--- A binary resource may be known by different decks using multiple names.
--- E.g. an image with MD5 CCB19BA[...] may be known to deck "Foo" both as
--- "a.jpeg" and "b.jpeg", while it's known to deck "Bar" as "c.jpeg".
--- Meanwhile, for deck "Baz", "a.jpeg" may refer to an image with MD5 E592AFC[...].
-
-CREATE TABLE IF NOT EXISTS "decks_to_resources" (
-	"id" INTEGER PRIMARY KEY AUTOINCREMENT,
+	"id"	BLOB NOT NULL UNIQUE,
+	"path"	TEXT NOT NULL,
+	"original_path"	TEXT NOT NULL,
 	"deck_id"	BLOB NOT NULL,
-	"resource_md5"	BLOB NOT NULL,
-	"name"	TEXT NOT NULL,
 	FOREIGN KEY("deck_id") REFERENCES "decks"("id"),
-	FOREIGN KEY("resource_md5") REFERENCES "resources"("md5"),
-	UNIQUE("deck_id","name")
+	UNIQUE("deck_id","id")
 );
 
 -- The mastery record is unique for a combination of cardtype and fact.
@@ -220,7 +208,6 @@ CREATE TABLE IF NOT EXISTS "mastery_records" (
   </data>
   <data name="DropAllTables" xml:space="preserve">
     <value>DROP TABLE IF EXISTS mastery_records;
-DROP TABLE IF EXISTS decks_to_resources;
 DROP TABLE IF EXISTS resources;
 DROP TABLE IF EXISTS cardtypes;
 DROP TABLE IF EXISTS facts_contents;

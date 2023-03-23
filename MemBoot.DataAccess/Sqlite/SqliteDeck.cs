@@ -112,5 +112,10 @@ namespace MemBoot.DataAccess.Sqlite
 
             return this;
         }
+
+        public string? GetRealResourcePath(string resourcePath)
+        {
+            return deck.Resources.Values.FirstOrDefault(r => r.OriginalPath == resourcePath)?.Path;
+        }
     }
 }

@@ -85,7 +85,6 @@ namespace MemBoot.DataAccess.Sqlite {
         
         /// <summary>
         ///   Looks up a localized string similar to DROP TABLE IF EXISTS mastery_records;
-        ///DROP TABLE IF EXISTS decks_to_resources;
         ///DROP TABLE IF EXISTS resources;
         ///DROP TABLE IF EXISTS cardtypes;
         ///DROP TABLE IF EXISTS facts_contents;

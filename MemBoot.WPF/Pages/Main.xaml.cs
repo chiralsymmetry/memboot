@@ -39,31 +39,20 @@ namespace MemBoot.Pages
 
         private void ImportButton_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new Microsoft.Win32.OpenFileDialog
+            var newDeck = ImportExportHelpers.ImportDeckFromJson();
+            if (newDeck != null)
             {
-                FileName = "Document",
-                DefaultExt = ".json",
-                Filter = "MemBoot deck (.json)|*.json"
-            };
-
-            bool? result = dialog.ShowDialog();
-            if (result == true)
-            {
-                Deck? newDeck = JsonDeck.ImportFile(dialog.FileName);
-                if (newDeck != null)
+                var success = deckStorage.AddDeck(newDeck);
+                if (success)
                 {
-                    var success = deckStorage.AddDeck(newDeck);
-                    if (success)
-                    {
-                        RefillStoredCardTypes();
-                    }
+                    RefillStoredCardTypes();
                 }
             }
         }
 
         private void CardTypeButton_Click(object sender, RoutedEventArgs e)
         {
-            if ((sender as Button)?.DataContext is Tuple<string, Guid> pick)
+            if (sender is Button { DataContext: Tuple<string, Guid> pick })
             {
                 var flashcard = deckStorage.GetFlashcard(pick.Item2);
                 if (flashcard != null)

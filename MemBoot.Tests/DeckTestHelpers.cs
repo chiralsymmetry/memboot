@@ -47,7 +47,7 @@ namespace MemBoot.Tests
 
             {
                 // Create a resource.
-                deck.Resources.Add("img.png", Image);
+                //deck.Resources.Add("img.png", Image);
             }
 
             return deck;

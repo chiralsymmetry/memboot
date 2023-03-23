@@ -1,4 +1,5 @@
-﻿using MemBoot.Core.Models;
+﻿using MemBoot.Core;
+using MemBoot.Core.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -59,7 +60,11 @@ namespace MemBoot.DataAccess.Json
                     }
                     else if (propertyName == nameof(Deck.Resources))
                     {
-                        output.Resources = JsonSerializer.Deserialize<IDictionary<string, byte[]>>(ref reader, options) ?? output.Resources;
+                        var oldPaths = JsonSerializer.Deserialize<ICollection<string>>(ref reader, options) ?? new List<string>();
+                        foreach (var oldPath in oldPaths)
+                        {
+                            Files.ResourceDirectory.CreateResourceAndAdd(output, oldPath);
+                        }
                     }
                     else if (propertyName == nameof(Deck.MasteryRecords))
                     {
@@ -116,7 +121,7 @@ namespace MemBoot.DataAccess.Json
             writer.WriteRawValue(JsonSerializer.Serialize(deck.CardTypes, options));
 
             writer.WritePropertyName(nameof(Deck.Resources));
-            writer.WriteRawValue(JsonSerializer.Serialize(deck.Resources, options));
+            writer.WriteRawValue(JsonSerializer.Serialize(deck.Resources.Values.Select(r => r.OriginalPath).ToList(), options));
 
             writer.WritePropertyName(nameof(Deck.MasteryRecords));
             writer.WriteRawValue(JsonSerializer.Serialize(deck.MasteryRecords, options));

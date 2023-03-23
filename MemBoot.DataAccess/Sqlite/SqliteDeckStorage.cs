@@ -84,22 +84,8 @@ namespace MemBoot.DataAccess.Sqlite
                         ct.CardsAreComposable
                     }).ToList<dynamic>()) == deck.CardTypes.Count;
 
-                    {
-                        var dataToMD5 = new Dictionary<byte[], byte[]>();
-                        using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-                        {
-                            foreach (var resource in deck.Resources.Values)
-                            {
-                                var md5OfData = md5.ComputeHash(resource);
-                                dataToMD5[resource] = md5OfData;
-                            }
-                            sql = "INSERT INTO resources (md5, data) VALUES (@Md5, @Data);";
-                            output &= connection.Execute(sql, dataToMD5.Select(kvp => new { Md5 = kvp.Value, Data = kvp.Key }).ToList<dynamic>()) == dataToMD5.Count;
-                        }
-
-                        sql = "INSERT INTO decks_to_resources (deck_id, resource_md5, name) VALUES (@DeckId, @ResourceMd5, @Name);";
-                        output &= connection.Execute(sql, deck.Resources.Select(kvp => new { DeckId = deck.Id, ResourceMd5 = dataToMD5[kvp.Value], Name = kvp.Key }).ToList<dynamic>()) == deck.Resources.Keys.Count;
-                    }
+                    sql = "INSERT INTO resources (id, path, original_path, deck_id) VALUES (@Id, @Path, @OriginalPath, @DeckId);";
+                    output &= connection.Execute(sql, deck.Resources.Values.Select(r => new { r.Id, r.Path, r.OriginalPath, DeckId = deck.Id }).ToList<dynamic>()) == deck.Resources.Count;
 
                     sql = "INSERT INTO mastery_records (cardtype_id, fact_id, mastery) VALUES (@CardTypeId, @FactId, @Mastery);";
                     foreach (var kvp in deck.MasteryRecords)
@@ -132,7 +118,7 @@ namespace MemBoot.DataAccess.Sqlite
             using var connection = new SQLiteConnection(connectionString);
             if (connection != null)
             {
-                var sql = "SELECT 1 FROM decks WHERE id = @deckId;";
+                const string sql = "SELECT 1 FROM decks WHERE id = @deckId;";
                 var affectedRows = connection.Query<int>(sql, new { deckId });
                 output = affectedRows.Any();
             }
@@ -142,7 +128,7 @@ namespace MemBoot.DataAccess.Sqlite
 
         public bool AddOrReplaceDeck(Deck deck)
         {
-            var output = false;
+            bool output;
 
             if (DeckIsStored(deck.Id))
             {
@@ -164,7 +150,7 @@ namespace MemBoot.DataAccess.Sqlite
         {
             var output = false;
 
-            string sql = string.Empty;
+            string sql;
             using var connection = new SQLiteConnection(connectionString);
             if (connection != null)
             {
@@ -175,12 +161,8 @@ namespace MemBoot.DataAccess.Sqlite
                     sql = "DELETE FROM mastery_records WHERE cardtype_id IN (SELECT id FROM cardtypes WHERE deck_id = @deckId);";
                     connection.Execute(sql, new { deckId = deck.Id });
 
-                    sql = "DELETE FROM decks_to_resources WHERE deck_id = @deckId;";
+                    sql = "DELETE FROM resources WHERE deck_id = @deckId;";
                     connection.Execute(sql, new { deckId = deck.Id });
-
-                    // Delete all resources not used in other decks (by checking if the MD5 is still being used).
-                    sql = "DELETE FROM resources WHERE md5 NOT IN (SELECT resource_md5 FROM decks_to_resources LEFT OUTER JOIN resources ON decks_to_resources.resource_md5 = resources.md5 WHERE resources.md5 IS NOT NULL);";
-                    connection.Execute(sql);
 
                     sql = "DELETE FROM cardtypes WHERE deck_id = @deckId;";
                     connection.Execute(sql, new { deckId = deck.Id });
@@ -265,8 +247,8 @@ namespace MemBoot.DataAccess.Sqlite
                     d.mastery_threshold, d.competency_threshold, d.cards_are_composable != 0)
                 ).ToList();
 
-                sql = "SELECT dr.name, r.data FROM resources r INNER JOIN decks_to_resources dr ON r.md5 = dr.resource_md5 WHERE dr.deck_id = @deckId;";
-                output.Resources = connection.Query<dynamic>(sql, new { deckId }).ToDictionary(d => (string)d.name, d => (byte[])d.data);
+                sql = "SELECT id, path, original_path FROM resources WHERE deck_id = @deckId;";
+                output.Resources = connection.Query<dynamic>(sql, new { deckId }).Select(d => new Resource(new Guid(d.id), d.path, d.original_path)).ToDictionary(r => r.Id, r => r);
 
                 {
                     sql = "SELECT mrec.cardtype_id, mrec.fact_id, mrec.mastery FROM mastery_records mrec INNER JOIN cardtypes ct ON ct.id = mrec.cardtype_id WHERE ct.deck_id = @deckId;";

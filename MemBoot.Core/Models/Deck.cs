@@ -12,7 +12,7 @@ namespace MemBoot.Core.Models
         public ICollection<Field> Fields { get; set; } = new List<Field>();
         public ICollection<Fact> Facts { get; set; } = new List<Fact>();
         public ICollection<CardType> CardTypes { get; set; } = new List<CardType>();
-        public IDictionary<string, byte[]> Resources { get; set; } = new Dictionary<string, byte[]>();
+        public IDictionary<Guid, Resource> Resources { get; set; } = new Dictionary<Guid, Resource>();
         public IDictionary<CardType, MasteryRecord> MasteryRecords { get; set; } = new Dictionary<CardType, MasteryRecord>();
 
         public bool IsFunctionallyEqualTo(Deck other)

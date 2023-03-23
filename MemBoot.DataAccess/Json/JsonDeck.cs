@@ -1,5 +1,6 @@
 ﻿using MemBoot.Core;
 using MemBoot.Core.Models;
+using System.IO;
 using System.Text.Json;
 
 namespace MemBoot.DataAccess.Json
@@ -83,6 +84,18 @@ namespace MemBoot.DataAccess.Json
             return JsonSerializer.Deserialize<Deck>(json, options);
         }
 
+        public static Deck? FromJsonFile(string path)
+        {
+            var json = File.ReadAllText(path);
+            var deck = FromJson(json);
+            if (deck?.Resources.Any() == true)
+            {
+                var basePath = Path.GetDirectoryName(path) ?? $".{Path.PathSeparator}";
+                Files.ResourceDirectory.CopyResources(deck, basePath);
+            }
+            return deck;
+        }
+
         public static string ToJson(Deck deck)
         {
             var options = new JsonSerializerOptions()
@@ -98,8 +111,7 @@ namespace MemBoot.DataAccess.Json
 
             if (File.Exists(path))
             {
-                var json = File.ReadAllText(path);
-                output = FromJson(json);
+                output = FromJsonFile(path);
             }
 
             return output;
@@ -124,6 +136,11 @@ namespace MemBoot.DataAccess.Json
         {
             var output = new JsonDeck(deck, cardType, savePath);
             return output;
+        }
+
+        public string? GetRealResourcePath(string resourcePath)
+        {
+            return deck.Resources.Values.FirstOrDefault(r => r.OriginalPath == resourcePath)?.Path;
         }
     }
 }
