@@ -1,81 +1,67 @@
 ﻿using MemBoot.Core.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace MemBoot.WPF.Controls
+namespace MemBoot.WPF.Controls;
+
+public partial class FactEditor : UserControl
 {
-    /// <summary>
-    /// Interaction logic for FactEditor.xaml
-    /// </summary>
-    public partial class FactEditor : UserControl
+    public FactEditor()
     {
-        public FactEditor()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        internal void RefreshColumnHeaders()
+    internal void RefreshColumnHeaders()
+    {
+        foreach (var column in FactsDataGrid.Columns.Cast<FieldColumn>().ToList())
         {
-            foreach (var column in FactsDataGrid.Columns.Cast<FieldColumn>().ToList())
-            {
-                column.RefreshHeader();
-            }
+            column.RefreshHeader();
         }
+    }
 
-        internal void RemakeColumns()
+    internal void RemakeColumns()
+    {
+        if (DataContext is DeckViewModel deckViewModel)
         {
-            if (DataContext is DeckViewModel deckViewModel)
+            var availableFields = new HashSet<Field>(deckViewModel.Fields);
+            var existingColumns = FactsDataGrid.Columns.Cast<DataGridColumn>().ToList();
+            foreach (var existingColumn in existingColumns)
             {
-                var availableFields = new HashSet<Field>(deckViewModel.Fields);
-                var existingColumns = FactsDataGrid.Columns.Cast<DataGridColumn>().ToList();
-                foreach (var existingColumn in existingColumns)
+                if (existingColumn is FieldColumn fieldColumn)
                 {
-                    if (existingColumn is FieldColumn fieldColumn)
+                    if (availableFields.Contains(fieldColumn.OriginalField))
                     {
-                        if (availableFields.Contains(fieldColumn.OriginalField))
-                        {
-                            fieldColumn.RefreshHeader();
-                            availableFields.Remove(fieldColumn.OriginalField);
-                        }
-                        else
-                        {
-                            FactsDataGrid.Columns.Remove(existingColumn);
-                        }
+                        fieldColumn.RefreshHeader();
+                        availableFields.Remove(fieldColumn.OriginalField);
+                    }
+                    else
+                    {
+                        FactsDataGrid.Columns.Remove(existingColumn);
                     }
                 }
-                foreach (var unusedField in availableFields)
-                {
-                    FactsDataGrid.Columns.Add(new FieldColumn(unusedField));
-                }
+            }
+            foreach (var unusedField in availableFields)
+            {
+                FactsDataGrid.Columns.Add(new FieldColumn(unusedField));
             }
         }
+    }
 
-        private void AddFactButton_Click(object sender, RoutedEventArgs e)
+    private void AddFactButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is DeckViewModel deckViewModel)
         {
-            if (DataContext is DeckViewModel deckViewModel)
-            {
-                deckViewModel.CreateNewFact();
-            }
+            deckViewModel.CreateNewFact();
         }
+    }
 
-        private void RemoveFactButton_Click(object sender, RoutedEventArgs e)
+    private void RemoveFactButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is DeckViewModel deckViewModel)
         {
-            if (DataContext is DeckViewModel deckViewModel)
-            {
-                deckViewModel.RemoveFacts(FactsDataGrid.SelectedItems.Cast<Fact>().ToList());
-            }
+            deckViewModel.RemoveFacts(FactsDataGrid.SelectedItems.Cast<Fact>().ToList());
         }
     }
 }

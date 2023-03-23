@@ -1,132 +1,130 @@
-﻿using MemBoot.Core;
-using MemBoot.Core.Models;
+﻿using MemBoot.Core.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace MemBoot.DataAccess.Json
+namespace MemBoot.DataAccess.Json;
+
+internal class DeckConverter : JsonConverter<Deck>
 {
-    internal class DeckConverter : JsonConverter<Deck>
+    public override Deck? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        public override Deck? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        Deck? output = new();
+        string factsJson = string.Empty;
+        string masteryJson = string.Empty;
+
+        while (reader.Read())
         {
-            Deck? output = new();
-            string factsJson = string.Empty;
-            string masteryJson = string.Empty;
-
-            while (reader.Read())
+            if (reader.TokenType == JsonTokenType.EndObject)
             {
-                if (reader.TokenType == JsonTokenType.EndObject)
+                break;
+            }
+            else if (reader.TokenType == JsonTokenType.PropertyName)
+            {
+                string propertyName = reader.GetString() ?? "";
+                reader.Read();
+                if (propertyName == nameof(Deck.Id))
                 {
-                    break;
+                    output.Id = JsonSerializer.Deserialize<Guid>(ref reader, options);
                 }
-                else if (reader.TokenType == JsonTokenType.PropertyName)
+                else if (propertyName == nameof(Deck.Name))
                 {
-                    string propertyName = reader.GetString() ?? "";
-                    reader.Read();
-                    if (propertyName == nameof(Deck.Id))
+                    var value = reader.GetString();
+                    output.Name = value ?? output.Name;
+                }
+                else if (propertyName == nameof(Deck.Description))
+                {
+                    var value = reader.GetString();
+                    output.Description = value ?? output.Description;
+                }
+                else if (propertyName == nameof(Deck.Fields))
+                {
+                    options = new JsonSerializerOptions(options)
                     {
-                        output.Id = JsonSerializer.Deserialize<Guid>(ref reader, options);
-                    }
-                    else if (propertyName == nameof(Deck.Name))
+                        Converters = { new FieldConverter() }
+                    };
+                    output.Fields = JsonSerializer.Deserialize<ICollection<Field>>(ref reader, options) ?? output.Fields;
+                }
+                else if (propertyName == nameof(Deck.Facts))
+                {
+                    var tmp = JsonSerializer.Deserialize<ICollection<IDictionary<string, JsonElement>>>(ref reader, options);
+                    factsJson = JsonSerializer.Serialize(tmp, options);
+                }
+                else if (propertyName == nameof(Deck.CardTypes))
+                {
+                    options = new JsonSerializerOptions(options)
                     {
-                        var value = reader.GetString();
-                        output.Name = value ?? output.Name;
-                    }
-                    else if (propertyName == nameof(Deck.Description))
+                        Converters = { new CardTypeConverter() }
+                    };
+                    output.CardTypes = JsonSerializer.Deserialize<ICollection<CardType>>(ref reader, options) ?? output.CardTypes;
+                }
+                else if (propertyName == nameof(Deck.Resources))
+                {
+                    var oldPaths = JsonSerializer.Deserialize<ICollection<string>>(ref reader, options) ?? new List<string>();
+                    foreach (var oldPath in oldPaths)
                     {
-                        var value = reader.GetString();
-                        output.Description = value ?? output.Description;
-                    }
-                    else if (propertyName == nameof(Deck.Fields))
-                    {
-                        options = new JsonSerializerOptions(options)
-                        {
-                            Converters = { new FieldConverter() }
-                        };
-                        output.Fields = JsonSerializer.Deserialize<ICollection<Field>>(ref reader, options) ?? output.Fields;
-                    }
-                    else if (propertyName == nameof(Deck.Facts))
-                    {
-                        var tmp = JsonSerializer.Deserialize<ICollection<IDictionary<string, JsonElement>>>(ref reader, options);
-                        factsJson = JsonSerializer.Serialize(tmp, options);
-                    }
-                    else if (propertyName == nameof(Deck.CardTypes))
-                    {
-                        options = new JsonSerializerOptions(options)
-                        {
-                            Converters = { new CardTypeConverter() }
-                        };
-                        output.CardTypes = JsonSerializer.Deserialize<ICollection<CardType>>(ref reader, options) ?? output.CardTypes;
-                    }
-                    else if (propertyName == nameof(Deck.Resources))
-                    {
-                        var oldPaths = JsonSerializer.Deserialize<ICollection<string>>(ref reader, options) ?? new List<string>();
-                        foreach (var oldPath in oldPaths)
-                        {
-                            Files.ResourceDirectory.CreateResourceAndAdd(output, oldPath);
-                        }
-                    }
-                    else if (propertyName == nameof(Deck.MasteryRecords))
-                    {
-                        var tmp = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(ref reader, options);
-                        masteryJson = JsonSerializer.Serialize(tmp, options);
+                        Files.ResourceDirectory.CreateResourceAndAdd(output, oldPath);
                     }
                 }
-            }
-
-            if (factsJson.Length > 0)
-            {
-                options = new JsonSerializerOptions(options)
+                else if (propertyName == nameof(Deck.MasteryRecords))
                 {
-                    Converters = { new FactConverter(output.Fields) }
-                };
-                output.Facts = JsonSerializer.Deserialize<ICollection<Fact>>(factsJson, options) ?? output.Facts;
+                    var tmp = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(ref reader, options);
+                    masteryJson = JsonSerializer.Serialize(tmp, options);
+                }
             }
-
-            if (masteryJson.Length > 0)
-            {
-                options = new JsonSerializerOptions(options)
-                {
-                    Converters = { new MasteryRecordsConverter(output.CardTypes, output.Facts) }
-                };
-                output.MasteryRecords = JsonSerializer.Deserialize<IDictionary<CardType, MasteryRecord>>(masteryJson, options) ?? output.MasteryRecords;
-            }
-
-            return output;
         }
 
-        public override void Write(Utf8JsonWriter writer, Deck deck, JsonSerializerOptions options)
+        if (factsJson.Length > 0)
         {
             options = new JsonSerializerOptions(options)
             {
-                Converters = { new FactConverter(deck.Fields), new MasteryRecordsConverter(deck.CardTypes, deck.Facts) }
+                Converters = { new FactConverter(output.Fields) }
             };
-
-            writer.WriteStartObject();
-
-            var deckId = JsonSerializer.Serialize(deck.Id, options);
-            writer.WritePropertyName(nameof(Deck.Id));
-            writer.WriteRawValue(deckId, true);
-
-            writer.WriteString(nameof(Deck.Name), deck.Name);
-            writer.WriteString(nameof(Deck.Description), deck.Description);
-
-            writer.WritePropertyName(nameof(Deck.Fields));
-            writer.WriteRawValue(JsonSerializer.Serialize(deck.Fields, options));
-
-            writer.WritePropertyName(nameof(Deck.Facts));
-            writer.WriteRawValue(JsonSerializer.Serialize(deck.Facts, options));
-
-            writer.WritePropertyName(nameof(Deck.CardTypes));
-            writer.WriteRawValue(JsonSerializer.Serialize(deck.CardTypes, options));
-
-            writer.WritePropertyName(nameof(Deck.Resources));
-            writer.WriteRawValue(JsonSerializer.Serialize(deck.Resources.Values.Select(r => r.OriginalPath).ToList(), options));
-
-            writer.WritePropertyName(nameof(Deck.MasteryRecords));
-            writer.WriteRawValue(JsonSerializer.Serialize(deck.MasteryRecords, options));
-
-            writer.WriteEndObject();
+            output.Facts = JsonSerializer.Deserialize<ICollection<Fact>>(factsJson, options) ?? output.Facts;
         }
+
+        if (masteryJson.Length > 0)
+        {
+            options = new JsonSerializerOptions(options)
+            {
+                Converters = { new MasteryRecordsConverter(output.CardTypes, output.Facts) }
+            };
+            output.MasteryRecords = JsonSerializer.Deserialize<IDictionary<CardType, MasteryRecord>>(masteryJson, options) ?? output.MasteryRecords;
+        }
+
+        return output;
+    }
+
+    public override void Write(Utf8JsonWriter writer, Deck deck, JsonSerializerOptions options)
+    {
+        options = new JsonSerializerOptions(options)
+        {
+            Converters = { new FactConverter(deck.Fields), new MasteryRecordsConverter(deck.CardTypes, deck.Facts) }
+        };
+
+        writer.WriteStartObject();
+
+        var deckId = JsonSerializer.Serialize(deck.Id, options);
+        writer.WritePropertyName(nameof(Deck.Id));
+        writer.WriteRawValue(deckId, true);
+
+        writer.WriteString(nameof(Deck.Name), deck.Name);
+        writer.WriteString(nameof(Deck.Description), deck.Description);
+
+        writer.WritePropertyName(nameof(Deck.Fields));
+        writer.WriteRawValue(JsonSerializer.Serialize(deck.Fields, options));
+
+        writer.WritePropertyName(nameof(Deck.Facts));
+        writer.WriteRawValue(JsonSerializer.Serialize(deck.Facts, options));
+
+        writer.WritePropertyName(nameof(Deck.CardTypes));
+        writer.WriteRawValue(JsonSerializer.Serialize(deck.CardTypes, options));
+
+        writer.WritePropertyName(nameof(Deck.Resources));
+        writer.WriteRawValue(JsonSerializer.Serialize(deck.Resources.Values.Select(r => r.OriginalPath).ToList(), options));
+
+        writer.WritePropertyName(nameof(Deck.MasteryRecords));
+        writer.WriteRawValue(JsonSerializer.Serialize(deck.MasteryRecords, options));
+
+        writer.WriteEndObject();
     }
 }

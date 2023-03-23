@@ -1,69 +1,67 @@
 ﻿using MemBoot.Core.Extensions;
 
-namespace MemBoot.Core.Models
+namespace MemBoot.Core.Models;
+
+public class Fact
 {
-    public class Fact
+    public Guid Id { get; set; }
+    public IDictionary<Field, string> FieldsContents { get; set; } = new Dictionary<Field, string>();
+
+    public string this[Field field]
     {
-        public Guid Id { get; set; }
-        public IDictionary<Field, string> FieldsContents { get; set; } = new Dictionary<Field, string>();
-
-        public string this[Field field]
+        get
         {
-            get
-            {
-                return FieldsContents[field];
-            }
-            set
-            {
-                FieldsContents[field] = value;
-            }
+            return FieldsContents[field];
         }
-
-        public Fact(Guid id)
+        set
         {
-            Id = id;
+            FieldsContents[field] = value;
         }
+    }
 
-        public Fact(Guid id, IEnumerable<Field> fields)
-        {
-            Id = id;
-            foreach (var field in fields)
-            {
-                FieldsContents[field] = string.Empty;
-            }
-        }
+    public Fact(Guid id)
+    {
+        Id = id;
+    }
 
-        public Fact(Guid id, IList<Field> fields, IList<string> contents)
+    public Fact(Guid id, IEnumerable<Field> fields)
+    {
+        Id = id;
+        foreach (var field in fields)
         {
-            Id = id;
-            if (fields.Count != contents.Count)
-            {
-                throw new ArgumentException("if supplying contents, all fields must be accounted for exactly");
-            }
-            for (int i = 0; i < fields.Count; i++)
-            {
-                var field = fields[i];
-                var content = contents[i];
-                FieldsContents[field] = content;
-            }
+            FieldsContents[field] = string.Empty;
         }
+    }
 
-        public Fact(Guid id, IDictionary<Field, string> fields)
+    public Fact(Guid id, IList<Field> fields, IList<string> contents)
+    {
+        Id = id;
+        if (fields.Count != contents.Count)
         {
-            Id = id;
-            foreach (var kvp in fields)
-            {
-                FieldsContents[kvp.Key] = kvp.Value;
-            }
+            throw new ArgumentException("if supplying contents, all fields must be accounted for exactly");
         }
+        for (int i = 0; i < fields.Count; i++)
+        {
+            var field = fields[i];
+            FieldsContents[field] = contents[i];
+        }
+    }
 
-        public bool IsFunctionallyEqualTo(Fact other)
+    public Fact(Guid id, IDictionary<Field, string> fields)
+    {
+        Id = id;
+        foreach (var kvp in fields)
         {
-            if (this == other) { return true; }
-            if (this == null || other == null) { return false; }
-            if (Id != other.Id) { return false; }
-            if (!FieldsContents.IsFunctionallyEqualTo(other.FieldsContents)) { return false; }
-            return true;
+            FieldsContents[kvp.Key] = kvp.Value;
         }
+    }
+
+    public bool IsFunctionallyEqualTo(Fact other)
+    {
+        if (this == other) { return true; }
+        if (this == null || other == null) { return false; }
+        if (Id != other.Id) { return false; }
+        if (!FieldsContents.IsFunctionallyEqualTo(other.FieldsContents)) { return false; }
+        return true;
     }
 }

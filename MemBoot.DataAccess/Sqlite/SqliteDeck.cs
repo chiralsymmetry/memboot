@@ -3,119 +3,118 @@ using MemBoot.Core;
 using MemBoot.Core.Models;
 using System.Data.SQLite;
 
-namespace MemBoot.DataAccess.Sqlite
+namespace MemBoot.DataAccess.Sqlite;
+
+public class SqliteDeck : IFlashcard
 {
-    public class SqliteDeck : IFlashcard
+    private readonly Random rnd = new();
+    private readonly Deck deck;
+    private readonly string connectionString;
+    private readonly CardType cardType;
+    private Fact? currentFact;
+
+    public SqliteDeck(Deck deck, CardType cardType, string connectionString)
     {
-        private readonly Random rnd = new();
-        private readonly Deck deck;
-        private readonly string connectionString;
-        private readonly CardType cardType;
-        private Fact? currentFact = null;
+        this.deck = deck;
+        this.cardType = cardType;
+        this.connectionString = connectionString;
+    }
 
-        public SqliteDeck(Deck deck, CardType cardType, string connectionString)
+    public string CurrentQuestion
+    {
+        get
         {
-            this.deck = deck;
-            this.cardType = cardType;
-            this.connectionString = connectionString;
-        }
-
-        public string CurrentQuestion
-        {
-            get
-            {
-                string output = string.Empty;
-                if (currentFact != null)
-                {
-                    output = deck.DoTemplateReplacement(currentFact, cardType.QuestionTemplate);
-                }
-                return output;
-            }
-        }
-
-        public string CurrentAnswer
-        {
-            get
-            {
-                string output = string.Empty;
-                if (currentFact != null)
-                {
-                    output = deck.DoTemplateReplacement(currentFact, cardType.AnswerTemplate);
-                }
-                return output;
-            }
-        }
-
-        public void AnswerCorrectly()
-        {
+            string output = string.Empty;
             if (currentFact != null)
             {
-                deck.UpdateFactMastery(cardType, currentFact, true);
-                UpdateSqlMastery(currentFact);
+                output = deck.DoTemplateReplacement(currentFact, cardType.QuestionTemplate);
             }
+            return output;
         }
+    }
 
-        public void AnswerIncorrectly()
+    public string CurrentAnswer
+    {
+        get
         {
+            string output = string.Empty;
             if (currentFact != null)
             {
-                deck.UpdateFactMastery(cardType, currentFact, false);
-                UpdateSqlMastery(currentFact);
+                output = deck.DoTemplateReplacement(currentFact, cardType.AnswerTemplate);
             }
+            return output;
         }
+    }
 
-        private void UpdateSqlMastery(Fact fact)
+    public void AnswerCorrectly()
+    {
+        if (currentFact != null)
         {
-            var mastery = deck.MasteryRecords[cardType][fact];
-            using var connection = new SQLiteConnection(connectionString);
-            if (connection != null)
-            {
-                var parameters = new { cardTypeId = cardType.Id, factId = fact.Id, mastery };
-
-                string sql = "SELECT sort_id FROM mastery_records WHERE cardtype_id = @cardTypeId AND fact_id = @factId;";
-                var hit = connection.Query(sql, parameters).Any();
-
-                if (hit)
-                {
-                    sql = "UPDATE mastery_records SET mastery = @mastery WHERE cardtype_id = @cardTypeId AND fact_id = @factId;";
-                    connection.Execute(sql, parameters);
-                }
-                else
-                {
-                    sql = "INSERT INTO mastery_records (cardtype_id, fact_id, mastery) VALUES (@cardTypeId, @factId, @mastery);";
-                    connection.Execute(sql, parameters);
-                }
-            }
+            deck.UpdateFactMastery(cardType, currentFact, true);
+            UpdateSqlMastery(currentFact);
         }
+    }
 
-        public IFlashcard Next()
+    public void AnswerIncorrectly()
+    {
+        if (currentFact != null)
         {
-            var recordsBefore = new HashSet<Fact>();
-            if (deck.MasteryRecords.ContainsKey(cardType))
+            deck.UpdateFactMastery(cardType, currentFact, false);
+            UpdateSqlMastery(currentFact);
+        }
+    }
+
+    private void UpdateSqlMastery(Fact fact)
+    {
+        var mastery = deck.MasteryRecords[cardType][fact];
+        using var connection = new SQLiteConnection(connectionString);
+        if (connection != null)
+        {
+            var parameters = new { cardTypeId = cardType.Id, factId = fact.Id, mastery };
+
+            string sql = "SELECT sort_id FROM mastery_records WHERE cardtype_id = @cardTypeId AND fact_id = @factId;";
+            var hit = connection.Query(sql, parameters).Any();
+
+            if (hit)
             {
-                recordsBefore = new HashSet<Fact>(deck.MasteryRecords[cardType].Keys);
+                sql = "UPDATE mastery_records SET mastery = @mastery WHERE cardtype_id = @cardTypeId AND fact_id = @factId;";
+                connection.Execute(sql, parameters);
             }
-
-            currentFact = deck.GetRandomFact(rnd, cardType, currentFact);
-
-            if (deck.MasteryRecords.ContainsKey(cardType))
+            else
             {
-                var recordsAfter = new HashSet<Fact>(deck.MasteryRecords[cardType].Keys);
-                if (recordsAfter.Count > recordsBefore.Count)
+                sql = "INSERT INTO mastery_records (cardtype_id, fact_id, mastery) VALUES (@cardTypeId, @factId, @mastery);";
+                connection.Execute(sql, parameters);
+            }
+        }
+    }
+
+    public IFlashcard Next()
+    {
+        var recordsBefore = new HashSet<Fact>();
+        if (deck.MasteryRecords.ContainsKey(cardType))
+        {
+            recordsBefore = new HashSet<Fact>(deck.MasteryRecords[cardType].Keys);
+        }
+
+        currentFact = deck.GetRandomFact(rnd, cardType, currentFact);
+
+        if (deck.MasteryRecords.ContainsKey(cardType))
+        {
+            var recordsAfter = new HashSet<Fact>(deck.MasteryRecords[cardType].Keys);
+            if (recordsAfter.Count > recordsBefore.Count)
+            {
+                foreach (var fact in recordsAfter.Except(recordsBefore))
                 {
-                    foreach (var fact in recordsAfter.Except(recordsBefore))
-                    {
-                        UpdateSqlMastery(fact);
-                    }
+                    UpdateSqlMastery(fact);
                 }
             }
-
-            return this;
         }
 
-        public string? GetRealResourcePath(string resourcePath)
-        {
-            return deck.Resources.Values.FirstOrDefault(r => r.OriginalPath == resourcePath)?.Path;
-        }
+        return this;
+    }
+
+    public string? GetRealResourcePath(string resourcePath)
+    {
+        return deck.Resources.Values.FirstOrDefault(r => r.OriginalPath == resourcePath)?.Path;
     }
 }

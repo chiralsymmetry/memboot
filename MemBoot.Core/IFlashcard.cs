@@ -1,14 +1,11 @@
-﻿using MemBoot.Core.Models;
+﻿namespace MemBoot.Core;
 
-namespace MemBoot.Core
+public interface IFlashcard
 {
-    public interface IFlashcard
-    {
-        string CurrentAnswer { get; }
-        string CurrentQuestion { get; }
-        void AnswerCorrectly();
-        void AnswerIncorrectly();
-        IFlashcard Next();
-        string? GetRealResourcePath(string resourcePath);
-    }
+    string CurrentAnswer { get; }
+    string CurrentQuestion { get; }
+    void AnswerCorrectly();
+    void AnswerIncorrectly();
+    IFlashcard Next();
+    string? GetRealResourcePath(string resourcePath);
 }

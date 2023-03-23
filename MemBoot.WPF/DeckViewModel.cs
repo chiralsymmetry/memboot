@@ -8,173 +8,172 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace MemBoot.WPF
+namespace MemBoot.WPF;
+
+public class DeckViewModel : INotifyPropertyChanged
 {
-    public class DeckViewModel : INotifyPropertyChanged
+    private Deck deck;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
     {
-        private Deck deck;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    internal Deck CurrentDeck { get => deck; }
+
+    public DeckViewModel(Deck deck)
+    {
+        this.deck = deck;
+        Fields = new(deck.Fields);
+        CardTypes = new(deck.CardTypes);
+        Facts = new(deck.Facts);
+        Resources = new(deck.Resources.Values);
+    }
+
+    public void ChangeDeck(Deck deck)
+    {
+        Fields.Clear();
+        CardTypes.Clear();
+        Facts.Clear();
+        Resources.Clear();
+        this.deck = deck;
+        foreach (var field in deck.Fields)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Fields.Add(field);
         }
-
-        internal Deck CurrentDeck { get => deck; }
-
-        public DeckViewModel(Deck deck)
+        foreach (var cardType in deck.CardTypes)
         {
-            this.deck = deck;
-            Fields = new(deck.Fields);
-            CardTypes = new(deck.CardTypes);
-            Facts = new(deck.Facts);
-            Resources = new(deck.Resources.Values);
+            CardTypes.Add(cardType);
         }
-
-        public void ChangeDeck(Deck deck)
+        foreach (var fact in deck.Facts)
         {
-            Fields.Clear();
-            CardTypes.Clear();
-            Facts.Clear();
-            Resources.Clear();
-            this.deck = deck;
-            foreach (var field in deck.Fields)
-            {
-                Fields.Add(field);
-            }
-            foreach (var cardType in deck.CardTypes)
-            {
-                CardTypes.Add(cardType);
-            }
-            foreach (var fact in deck.Facts)
-            {
-                Facts.Add(fact);
-            }
-            foreach (var resource in deck.Resources.Values)
-            {
-                Resources.Add(resource);
-            }
-            NotifyPropertyChanged(nameof(Name));
-            NotifyPropertyChanged(nameof(Description));
+            Facts.Add(fact);
         }
-
-        public string Name
+        foreach (var resource in deck.Resources.Values)
         {
-            get
-            {
-                return deck.Name;
-            }
-            set
-            {
-                deck.Name = value;
-            }
+            Resources.Add(resource);
         }
+        NotifyPropertyChanged(nameof(Name));
+        NotifyPropertyChanged(nameof(Description));
+    }
 
-        public string Description
+    public string Name
+    {
+        get
         {
-            get
-            {
-                return deck.Description;
-            }
-            set
-            {
-                deck.Description = value;
-            }
+            return deck.Name;
         }
-
-        public ObservableCollection<Field> Fields { get; }
-
-        internal void CreateNewField()
+        set
         {
-            string newName = string.Empty;
+            deck.Name = value;
+        }
+    }
+
+    public string Description
+    {
+        get
+        {
+            return deck.Description;
+        }
+        set
+        {
+            deck.Description = value;
+        }
+    }
+
+    public ObservableCollection<Field> Fields { get; }
+
+    internal void CreateNewField()
+    {
+        string newName = string.Empty;
+        {
+            const string nameBase = "New Field";
+            int number = 1;
+            newName = nameBase;
+            var occupied = deck.Fields.Any(f => f.Name == newName);
+            while (occupied)
             {
-                const string nameBase = "New Field";
-                int number = 1;
-                newName = nameBase;
-                var occupied = deck.Fields.Any(f => f.Name == newName);
-                while (occupied)
-                {
-                    newName = $"{nameBase} {number++}";
-                    occupied = deck.Fields.Any(f => f.Name == newName);
-                }
-            }
-            var newField = new Field(newName);
-            deck.Fields.Add(newField);
-            Fields.Add(newField);
-        }
-
-        internal void RemoveField(Field field)
-        {
-            Fields.Remove(field);
-            foreach (var fact in deck.Facts)
-            {
-                fact.FieldsContents.Remove(field);
-            }
-            deck.Fields.Remove(field);
-        }
-
-        public ObservableCollection<CardType> CardTypes { get; }
-
-        internal void CreateCardType()
-        {
-            string newName = string.Empty;
-            {
-                const string nameBase = "New Card Type";
-                int number = 1;
-                newName = nameBase;
-                var occupied = deck.CardTypes.Any(ct => ct.Name == newName);
-                while (occupied)
-                {
-                    newName = $"{nameBase} {number++}";
-                    occupied = deck.CardTypes.Any(ct => ct.Name == newName);
-                }
-            }
-            var newCardType = new CardType(Guid.NewGuid(), newName, "", "");
-            deck.CardTypes.Add(newCardType);
-            CardTypes.Add(newCardType);
-        }
-
-        internal void RemoveCardType(CardType cardType)
-        {
-            CardTypes.Remove(cardType);
-            deck.MasteryRecords.Remove(cardType);
-            deck.CardTypes.Remove(cardType);
-        }
-
-        public ObservableCollection<Fact> Facts { get; }
-
-        internal void CreateNewFact()
-        {
-            var newFact = new Fact(Guid.NewGuid());
-            deck.Facts.Add(newFact);
-            Facts.Add(newFact);
-        }
-
-        internal void RemoveFacts(IEnumerable<Fact> selectedFacts)
-        {
-            foreach (var fact in selectedFacts)
-            {
-                deck.Facts.Remove(fact);
-                Facts.Remove(fact);
+                newName = $"{nameBase} {number++}";
+                occupied = deck.Fields.Any(f => f.Name == newName);
             }
         }
+        var newField = new Field(newName);
+        deck.Fields.Add(newField);
+        Fields.Add(newField);
+    }
 
-        public ObservableCollection<Resource> Resources { get; }
-
-        internal void ImportNewResource()
+    internal void RemoveField(Field field)
+    {
+        Fields.Remove(field);
+        foreach (var fact in deck.Facts)
         {
-            var result = ImportExportHelpers.ImportResource(deck);
-            if (result != null)
+            fact.FieldsContents.Remove(field);
+        }
+        deck.Fields.Remove(field);
+    }
+
+    public ObservableCollection<CardType> CardTypes { get; }
+
+    internal void CreateCardType()
+    {
+        string newName = string.Empty;
+        {
+            const string nameBase = "New Card Type";
+            int number = 1;
+            newName = nameBase;
+            var occupied = deck.CardTypes.Any(ct => ct.Name == newName);
+            while (occupied)
             {
-                Resources.Add(result);
+                newName = $"{nameBase} {number++}";
+                occupied = deck.CardTypes.Any(ct => ct.Name == newName);
             }
         }
+        var newCardType = new CardType(Guid.NewGuid(), newName, "", "");
+        deck.CardTypes.Add(newCardType);
+        CardTypes.Add(newCardType);
+    }
 
-        internal void RemoveResource(Resource resource)
+    internal void RemoveCardType(CardType cardType)
+    {
+        CardTypes.Remove(cardType);
+        deck.MasteryRecords.Remove(cardType);
+        deck.CardTypes.Remove(cardType);
+    }
+
+    public ObservableCollection<Fact> Facts { get; }
+
+    internal void CreateNewFact()
+    {
+        var newFact = new Fact(Guid.NewGuid());
+        deck.Facts.Add(newFact);
+        Facts.Add(newFact);
+    }
+
+    internal void RemoveFacts(IEnumerable<Fact> selectedFacts)
+    {
+        foreach (var fact in selectedFacts)
         {
-            deck.Resources.Remove(resource.Id);
-            Resources.Remove(resource);
-            File.Delete(resource.Path);
+            deck.Facts.Remove(fact);
+            Facts.Remove(fact);
         }
+    }
+
+    public ObservableCollection<Resource> Resources { get; }
+
+    internal void ImportNewResource()
+    {
+        var result = ImportExportHelpers.ImportResource(deck);
+        if (result != null)
+        {
+            Resources.Add(result);
+        }
+    }
+
+    internal void RemoveResource(Resource resource)
+    {
+        deck.Resources.Remove(resource.Id);
+        Resources.Remove(resource);
+        File.Delete(resource.Path);
     }
 }
